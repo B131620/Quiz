@@ -537,7 +537,7 @@ pre.script{background:#0d1117;border:1px solid var(--border);border-radius:10px;
     </div>
 
     <label class="inp-label">Candidate Name *</label>
-    <input class="inp" id="pName" placeholder="e.g. Arjun Sharma" maxlength="50"/>
+    <input class="inp" id="pName" placeholder="e.g. Santosh Kumar" maxlength="50"/>
 
     <label class="inp-label">Email (optional)</label>
     <input class="inp" id="pEmail" placeholder="candidate@email.com" type="email"/>
@@ -594,114 +594,114 @@ pre.script{background:#0d1117;border:1px solid var(--border);border-radius:10px;
 const Q = [
 
   // ── RADIO ×20 ──────────────────────────────────────────────
-  {type:'radio',timeLimit:20,neg:3,
-   text:'What is the capital city of France?',
-   opts:['London','Berlin','Paris','Madrid'],correct:2},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'What is Sample Data in Machine Learning?',
+   opts:['Data that is used to train a model','Data that is used to confuse a model','Data that is not used in ML','Data that is only available in the cloud'],correct:0},
 
-  {type:'radio',timeLimit:15,neg:3,
-   text:'Which planet is known as the Red Planet?',
-   opts:['Venus','Mars','Jupiter','Saturn'],correct:1},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'Which of the following is an example of supervised learning?',
+   opts:['Clustering customer data','Grouping similar images','Predicting house prices using past data','Finding patterns without labels'],correct:2},
 
-  {type:'radio',timeLimit:20,neg:3,
-   text:'Who painted the Mona Lisa?',
-   opts:['Van Gogh','Picasso','Leonardo da Vinci','Michelangelo'],correct:2},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'What does a Decision Tree use to make predictions?',
+   opts:['Matrix multiplication','A series of if/else questions on features','Gradient calculations','Cluster centroids'],correct:1},
 
-  {type:'radio',timeLimit:15,neg:3,
-   text:'What is the largest ocean on Earth?',
-   opts:['Atlantic','Indian','Arctic','Pacific'],correct:3},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'In KNN Model, what does "K" represent?',
+   opts:['Number of nearest neighbors','Number of features','Number of clusters','Number of samples'],correct:0},
 
-  {type:'radio',timeLimit:20,neg:3,
-   text:'In which year did World War II end?',
-   opts:['1943','1944','1945','1946'],correct:2},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'Linear Regression is used to predict:',
+   opts:['Categories like spam or not spam','Continuous values like temperature or price','Clusters of data','Images'],correct:1},
 
-  {type:'radio',timeLimit:18,neg:3,
-   text:'What is the chemical symbol for Gold?',
-   opts:['Ag','Fe','Au','Cu'],correct:2},
+  {type:'radio',timeLimit:60,neg:3,
+   text:'What is the purpose of splitting data into training and test sets?',
+   opts:['To reduce the size of the dataset','To evaluate how well the model performs on upcoming/unseen data','To clean the data','To speed up training'],correct:1},
 
-  {type:'radio',timeLimit:20,neg:3,
-   text:'Who wrote "Romeo and Juliet"?',
-   opts:['Charles Dickens','William Shakespeare','Jane Austen','Homer'],correct:1},
+  {type:'radio',timeLimit:60,neg:3,
+   text:'Which best describes K-Means Clustering?',
+   opts:['Predicts a number for each input','Groups data into K clusters based on similarity','Classifies emails as spam or not','Builds a tree of decisions'],correct:1},
 
-  {type:'radio',timeLimit:18,neg:3,
-   text:'What is the approximate speed of light?',
-   opts:['150,000 km/s','300,000 km/s','500,000 km/s','1,000,000 km/s'],correct:1},
+  {type:'radio',timeLimit:60,neg:3,
+   text:'Which of the below is not a best philosophy to follow in life?',
+   opts:['Always ready with skills becuase oppurtunities comes in unexpected way','Financial/Time/Health Management is very important','Entertain First Learn Next because this age wont come again','Descipline and Balanced Lifestyle is important'],correct:2},
 
-  {type:'radio',timeLimit:15,neg:3,
-   text:'What is the hardest natural substance on Earth?',
-   opts:['Gold','Titanium','Diamond','Quartz'],correct:2},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'What is a Large Language Model (LLM)?',
+   opts:['A very large spreadsheet of words','An AI model trained on massive amounts of text to understand and generate language','A type of database','A programming language for AI'],correct:1},
 
-  {type:'radio',timeLimit:18,neg:3,
-   text:'Which continent has the most countries?',
-   opts:['Asia','Africa','Europe','Americas'],correct:1},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'In Reinforcement Learning, an AI agent learns by:',
+   opts:['Studying labeled data','Reading textbooks','Receiving rewards or penalties based on its actions','Copying human behavior directly'],correct:2},
 
-  {type:'radio',timeLimit:20,neg:3,
-   text:'What does DNA stand for?',
-   opts:['Deoxyribonucleic Acid','Dinucleotide Acid','Dual Nucleic Array','Dynamic Nucleic Acid'],correct:0},
+  {type:'radio',timeLimit:60,neg:3,
+   text:'Which of the following best describes Computer Vision?',
+   opts:['Teaching computers to speak','Enabling computers to interpret and understand visual data like images and videos','A method for storing large datasets','A programming language for AI'],correct:1},
 
-  {type:'radio',timeLimit:18,neg:3,
-   text:'Which organ in the human body produces insulin?',
-   opts:['Liver','Kidney','Pancreas','Heart'],correct:2},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'Which of the following is an example of AI in everyday life?',
+   opts:['Using a calculator','A voice assistant like Siri or Alexa','Sending an email','Using a USB drive'],correct:1},
 
-  {type:'radio',timeLimit:20,neg:3,
-   text:'How many elements are in the periodic table?',
-   opts:['108','118','128','138'],correct:1},
+  {type:'radio',timeLimit:30,neg:3,
+   text:'Which of the following is a subset of Artificial Intelligence?',
+   opts:['Cloud Computing','Cybersecurity','Machine Learning','Blockchain'],correct:2},
 
-  {type:'radio',timeLimit:20,neg:3,
-   text:'Who developed the theory of relativity?',
-   opts:['Isaac Newton','Nikola Tesla','Albert Einstein','Niels Bohr'],correct:2},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'Which of the following is the best definition of Artificial Intelligence?',
+   opts:['A robot that looks like a human','The ability of machines to perform tasks that normally require human intelligence','A programming language used for data analysis','A type of computer hardware'],correct:1},
 
-  {type:'radio',timeLimit:15,neg:3,
-   text:'What is the powerhouse of the cell?',
-   opts:['Nucleus','Ribosome','Mitochondria','Golgi Apparatus'],correct:2},
+  {type:'radio',timeLimit:30,neg:3,
+   text:'Which company created the AI chatbot ChatGPT?',
+   opts:['Google','Meta','OpenAI','Microsoft'],correct:2},
 
-  {type:'radio',timeLimit:18,neg:3,
-   text:'In which year was the World Wide Web invented?',
-   opts:['1983','1989','1995','2000'],correct:1},
+  {type:'radio',timeLimit:30,neg:3,
+   text:'Which of the following will do same tasks repeatedly on each call in programming languages?',
+   opts:['Functions','For Loops','If Else','Arrays'],correct:0},
 
-  {type:'radio',timeLimit:20,neg:3,
-   text:'What is the largest planet in our solar system?',
-   opts:['Saturn','Neptune','Uranus','Jupiter'],correct:3},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'Generative AI?',
+   opts:['Generate Text','Generate Videos and Images','Generate Music and Code','All of the above'],correct:3},
 
-  {type:'radio',timeLimit:15,neg:3,
-   text:'How many bones are in the adult human body?',
-   opts:['186','196','206','216'],correct:2},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'Best Method for Average value Calculation if outliers are there?',
+   opts:['Mean','Mode','Median','Deviation'],correct:2},
 
-  {type:'radio',timeLimit:18,neg:3,
-   text:'What is the currency of Japan?',
-   opts:['Yuan','Won','Yen','Ringgit'],correct:2},
+  {type:'radio',timeLimit:30,neg:3,
+   text:'Which of the below is not threat to AI?',
+   opts:['Biased Data','Ethics','Deepfake','Misinformation'],correct:1},
 
-  {type:'radio',timeLimit:20,neg:3,
-   text:'Which gas do plants absorb during photosynthesis?',
-   opts:['Oxygen','Nitrogen','Carbon Dioxide','Hydrogen'],correct:2},
+  {type:'radio',timeLimit:45,neg:3,
+   text:'Class Room Attentiveness Test:  SWOT Means?',
+   opts:['Strengths, Work, Opportunities, Time','Satisfaction, Weaknesses, Outcome, Threats','Success, Wisdom, Opportunity, Threat','Strengths, Weaknesses, Opportunities, Threats'],correct:3},
 
   // ── TRUE/FALSE ×5 ──────────────────────────────────────────
-  {type:'truefalse',timeLimit:12,neg:3,
-   text:'The Great Wall of China is visible from space with the naked eye.',correct:false},
+  {type:'truefalse',timeLimit:25,neg:3,
+   text:'Class Room Attentiveness Test: Vitamin C in Guava > Apple > Oranges.',correct:false},
 
-  {type:'truefalse',timeLimit:12,neg:3,
-   text:'Sound travels faster than light.',correct:false},
+  {type:'truefalse',timeLimit:25,neg:3,
+   text:'Class Room Attentiveness Test: In India Agriculture income is Taxed.',correct:false},
 
-  {type:'truefalse',timeLimit:12,neg:3,
-   text:'Bats are the only mammals capable of sustained flight.',correct:true},
+  {type:'truefalse',timeLimit:25,neg:3,
+   text:'Class Room Attentiveness Test: Problems are mother of innovation.',correct:true},
 
-  {type:'truefalse',timeLimit:10,neg:3,
-   text:'Water boils at 100°C at sea level.',correct:true},
+  {type:'truefalse',timeLimit:25,neg:3,
+   text:'Class Room Attentiveness Test: Data is transferred from US to India via Cell Towers.',correct:false},
 
-  {type:'truefalse',timeLimit:12,neg:3,
-   text:'Mount Everest is the tallest mountain measured from Earth\'s center.',correct:false},
+  {type:'truefalse',timeLimit:25,neg:3,
+   text:'Class Room Attentiveness Test: Google Collab Notebook Code Runs on your local machine processor.',correct:false},
 
   // ── MULTI-SELECT ×2 ────────────────────────────────────────
-  {type:'multi',timeLimit:30,neg:3,
+  {type:'multi',timeLimit:45,neg:3,
    text:'Which of the following are programming languages? (Select ALL that apply)',
-   opts:['Python','HTML','JavaScript','Photoshop','Rust'],correct:[0,2,4]},
+   opts:['Python','C','JavaScript','Photoshop','Chatgpt'],correct:[0,1,2]},
 
-  {type:'multi',timeLimit:28,neg:3,
-   text:'Which planets in our solar system have rings? (Select ALL that apply)',
-   opts:['Mercury','Saturn','Uranus','Mars','Neptune'],correct:[1,2,4]},
+  {type:'multi',timeLimit:45,neg:3,
+   text:'What is ML & What it can do? (Select ALL that apply)',
+   opts:['Gives Only Existing Data','Learns From Existing Data','Can do predictions','Can be trained on its own','Needs Model to Train'],correct:[1,2,4]},
 
   // ── CODE OUTPUT ×3 ─────────────────────────────────────────
   {
-    type:'code', timeLimit:35, neg:3,
+    type:'code', timeLimit:45, neg:3,
     text:'What is the output of the following Python code?',
     lang:'Python',
     code:
@@ -712,30 +712,29 @@ print(x[1:4])`,
   },
 
   {
-    type:'code', timeLimit:40, neg:3,
-    text:'What will this JavaScript snippet print to the console?',
-    lang:'JavaScript',
+    type:'code', timeLimit:45, neg:3,
+    text:'What is the output?',
+    lang:'Python',
     code:
-`function greet(name) {
-  return "Hello, " + name + "!";
-}
-console.log(greet("World"));`,
+`def greet(name):
+    return "Hello, " + name + "!"
+    print(greet("World"))`,
     opts:['Hello, World','Hello, World!','greet("World")','undefined'],
     correct:1
   },
 
   {
     type:'code', timeLimit:45, neg:3,
-    text:'What is the output of this Python code?',
+    text:'What is the output of this Python code? (Observe carefully)',
     lang:'Python',
     code:
-`def factorial(n):
-    if n == 0:
-        return 1
-    return n * factorial(n - 1)
-
-print(factorial(4))`,
-    opts:['16','24','12','factorial(4)'],
+`x=2
+ y=4
+ if x=y:
+    print("Equal")
+ else:
+    print("Not Equal")`,
+    opts:['Throw Error','Not Equal','Equal','No Output'],
     correct:1
   }
 ];
