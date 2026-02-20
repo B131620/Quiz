@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuizMaster Pro</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --bg:#0b0d12;
+  --s1:#111318;
+  --s2:#181c24;
+  --s3:#1e2330;
+  --border:#252b38;
+  --ink:#e8ecf4;
+  --muted:#6b7485;
+  --accent:#6366f1;
+  --accent-g:rgba(99,102,241,0.2);
+  --green:#10b981;
+  --green-g:rgba(16,185,129,0.15);
+  --red:#f43f5e;
+  --red-g:rgba(244,63,94,0.15);
+  --gold:#f59e0b;
+  --gold-g:rgba(245,158,11,0.15);
+  --blue:#3b82f6;
+  --blue-g:rgba(59,130,246,0.15);
+  --cyan:#06b6d4;
+  --cyan-g:rgba(6,182,212,0.15);
+  --orange:#f97316;
+  --r:12px;
+  --circ:163.4;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Sora',sans-serif;
+  background:var(--bg); color:var(--ink);
+  min-height:100vh; overflow-x:hidden;
+}
+
+body::before{
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 0%, rgba(99,102,241,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 85% 100%, rgba(6,182,212,0.05) 0%, transparent 55%);
+}
+
+.screen{display:none;min-height:100vh;position:relative;z-index:1;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* ═══════════════════════════════
+   SETUP SCREEN
+═══════════════════════════════ */
+#setupScreen{align-items:center;justify-content:center;padding:40px 20px;}
+
+.setup-card{
+  background:var(--s1); border:1px solid var(--border); border-radius:22px;
+  padding:44px 40px; max-width:540px; width:100%;
+  box-shadow:0 0 80px rgba(99,102,241,0.08);
+  position:relative; overflow:hidden;
+}
+.setup-card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--cyan),var(--green));
+}
+
+.brand-tag{
+  display:inline-flex; align-items:center; gap:7px;
+  background:var(--accent-g); border:1px solid rgba(99,102,241,0.3);
+  border-radius:50px; padding:5px 14px; margin-bottom:24px;
+  font-size:10px; font-weight:700; letter-spacing:2px;
+  color:var(--accent); text-transform:uppercase;
+}
+
+.setup-h{font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,38px);line-height:1.15;margin-bottom:10px;}
+.setup-h em{color:var(--accent);font-style:italic;}
+.setup-sub{color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:28px;}
+
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px;}
+.m-box{
+  background:var(--s2); border:1px solid var(--border); border-radius:10px;
+  padding:12px 8px; text-align:center;
+}
+.m-ico{font-size:18px;margin-bottom:4px;}
+.m-val{font-size:15px;font-weight:800;}
+.m-lab{font-size:9px;color:var(--muted);letter-spacing:0.5px;margin-top:2px;}
+
+.neg-strip{
+  background:var(--red-g); border:1px solid rgba(244,63,94,0.2);
+  border-radius:10px; padding:11px 14px; font-size:12px;
+  color:#fda4af; margin-bottom:22px; line-height:1.7;
+  display:flex;align-items:flex-start;gap:8px;
+}
+
+.inp{
+  width:100%; padding:12px 15px;
+  background:var(--s2); border:1px solid var(--border);
+  border-radius:10px; font-family:'Sora',sans-serif;
+  font-size:13px; color:var(--ink); outline:none;
+  transition:border-color 0.2s,box-shadow 0.2s; margin-bottom:10px;
+}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-g);}
+.inp::placeholder{color:var(--muted);}
+
+.inp-label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;display:block;}
+
+.start-btn{
+  width:100%; padding:14px;
+  background:linear-gradient(135deg,var(--accent),#4f46e5); color:#fff;
+  border:none; border-radius:10px; font-family:'Sora',sans-serif;
+  font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s;
+  box-shadow:0 4px 20px rgba(99,102,241,0.35);
+}
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(99,102,241,0.45);}
+
+.help-link{font-size:11px;color:var(--accent);cursor:pointer;text-decoration:underline;}
+
+/* ═══════════════════════════════
+   QUIZ SCREEN
+═══════════════════════════════ */
+#quizScreen{padding:18px 18px 40px;max-width:800px;margin:0 auto;width:100%;}
+
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.prog-wrap{flex:1;}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.q-label{font-size:12px;font-weight:600;color:var(--muted);}
+.chips{display:flex;gap:6px;align-items:center;}
+.chip{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;border:1px solid;}
+.chip-g{color:var(--green);border-color:rgba(16,185,129,0.3);background:var(--green-g);}
+.chip-r{color:var(--red);border-color:rgba(244,63,94,0.3);background:var(--red-g);}
+.chip-m{color:var(--muted);border-color:var(--border);background:var(--s2);font-size:10px;}
+.prog-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));border-radius:3px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);}
+
+.timer-ring{position:relative;width:58px;height:58px;flex-shrink:0;}
+.t-svg{width:58px;height:58px;transform:rotate(-90deg);}
+.t-bg{fill:none;stroke:var(--border);stroke-width:3.5;}
+.t-arc{fill:none;stroke:var(--green);stroke-width:3.5;stroke-linecap:round;transition:stroke-dashoffset 0.95s linear,stroke 0.4s;stroke-dasharray:var(--circ);stroke-dashoffset:0;}
+.t-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;transition:color 0.4s;}
+
+/* Question Card */
+.q-card{
+  background:var(--s1); border:1px solid var(--border); border-radius:16px;
+  padding:26px 26px 20px; margin-bottom:14px;
+  animation:slideUp 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+.q-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:16px;}
+
+.qbadge{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;}
+.qb-radio{background:rgba(245,158,11,0.15);color:var(--gold);border:1px solid rgba(245,158,11,0.25);}
+.qb-multi{background:var(--blue-g);color:var(--blue);border:1px solid rgba(59,130,246,0.25);}
+.qb-tf{background:var(--accent-g);color:var(--accent);border:1px solid rgba(99,102,241,0.25);}
+.qb-code{background:var(--cyan-g);color:var(--cyan);border:1px solid rgba(6,182,212,0.25);}
+.qb-time{background:var(--s2);color:var(--muted);border:1px solid var(--border);}
+.qb-neg{background:var(--red-g);color:var(--red);border:1px solid rgba(244,63,94,0.25);}
+
+.q-text{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(15px,2.4vw,20px);line-height:1.5;color:var(--ink);margin-bottom:20px;
+}
+
+/* Code block */
+.code-block{
+  background:#0d1117; border:1px solid var(--border); border-radius:10px;
+  padding:16px 18px; margin-bottom:20px; position:relative; overflow:hidden;
+}
+.code-block::before{
+  content:''; position:absolute; top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--accent));
+}
+.code-lang{
+  position:absolute; top:8px; right:12px;
+  font-size:9px; font-weight:700; letter-spacing:1.5px;
+  color:var(--cyan); text-transform:uppercase; opacity:0.7;
+}
+.code-body{
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+  color:#e2e8f0; line-height:1.7; white-space:pre; overflow-x:auto;
+}
+/* Syntax coloring */
+.kw{color:#c792ea;}   /* keywords */
+.fn{color:#82aaff;}   /* functions */
+.st{color:#c3e88d;}   /* strings */
+.nm{color:#f78c6c;}   /* numbers */
+.cm{color:#546e7a;font-style:italic;} /* comments */
+.bi{color:#89ddff;}   /* built-ins */
+.op{color:#89ddff;}   /* operators */
+.indent{display:inline-block;}
+
+.output-label{
+  font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--cyan); margin-bottom:8px; display:flex; align-items:center; gap:6px;
+}
+.output-label::before{content:'▶';font-size:8px;}
+
+/* Radio options */
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.opts-grid.col1{grid-template-columns:1fr;}
+
+.opt{
+  display:flex;align-items:center;gap:11px;padding:12px 14px;
+  border:1.5px solid var(--border); border-radius:10px;
+  background:var(--s2); cursor:pointer; transition:all 0.15s;
+  font-family:'Sora',sans-serif; font-size:13px; color:var(--ink);
+  text-align:left;
+}
+.opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-g);}
+.opt.sel{border-color:var(--accent);background:var(--accent-g);color:var(--accent);}
+.opt.ok{border-color:var(--green)!important;background:var(--green-g)!important;color:var(--green)!important;}
+.opt.bad{border-color:var(--red)!important;background:var(--red-g)!important;color:var(--red)!important;}
+.opt.show-ok{border-color:var(--green)!important;background:var(--green-g)!important;color:var(--green)!important;}
+
+/* Code output opts — monospace */
+.opt.code-opt{font-family:'JetBrains Mono',monospace;font-size:12px;align-items:flex-start;}
+.opt.code-opt .opt-key{margin-top:1px;}
+
+.opt-key{
+  width:26px;height:26px;border-radius:6px;
+  background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;flex-shrink:0;transition:all 0.15s;
+}
+.opt.sel .opt-key{background:var(--accent);border-color:var(--accent);color:#fff;}
+.opt.ok .opt-key,.opt.show-ok .opt-key{background:var(--green);border-color:var(--green);color:#fff;}
+.opt.bad .opt-key{background:var(--red);border-color:var(--red);color:#fff;}
+
+/* Multi-select */
+.cbox-list{display:flex;flex-direction:column;gap:7px;}
+.copt{
+  display:flex;align-items:center;gap:11px;padding:12px 14px;
+  border:1.5px solid var(--border);border-radius:10px;
+  background:var(--s2);cursor:pointer;transition:all 0.15s;font-size:13px;
+}
+.copt:hover:not(.locked){border-color:var(--blue);background:var(--blue-g);}
+.copt.on{border-color:var(--blue);background:var(--blue-g);color:var(--blue);}
+.copt.ok{border-color:var(--green)!important;background:var(--green-g)!important;color:var(--green)!important;}
+.copt.bad{border-color:var(--red)!important;background:var(--red-g)!important;color:var(--red)!important;}
+.copt.show-ok{border-color:var(--green)!important;background:var(--green-g)!important;color:var(--green)!important;}
+.cbox{width:20px;height:20px;border:1.5px solid currentColor;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;}
+
+/* True/False */
+.tf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.tf{
+  padding:16px;border:1.5px solid var(--border);border-radius:12px;
+  background:var(--s2);cursor:pointer;font-family:'Sora',sans-serif;
+  font-size:15px;font-weight:700;transition:all 0.15s;text-align:center;
+}
+.tf:hover:not(:disabled){transform:translateY(-2px);}
+.tf.t-btn:hover,.tf.sel-t{border-color:var(--green);background:var(--green-g);color:var(--green);}
+.tf.f-btn:hover,.tf.sel-f{border-color:var(--red);background:var(--red-g);color:var(--red);}
+.tf.correct{border-color:var(--green)!important;background:var(--green-g)!important;color:var(--green)!important;}
+.tf.wrong-a{border-color:var(--red)!important;background:var(--red-g)!important;color:var(--red)!important;}
+
+/* Feedback */
+.fb{
+  padding:10px 15px;border-radius:10px;font-size:13px;font-weight:500;
+  display:none;align-items:center;gap:8px;margin-bottom:13px;
+  animation:fd 0.25s ease;
+}
+@keyframes fd{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
+.fb.ok{display:flex;background:var(--green-g);color:#6ee7b7;border:1px solid rgba(16,185,129,0.2);}
+.fb.bad{display:flex;background:var(--red-g);color:#fda4af;border:1px solid rgba(244,63,94,0.2);}
+.fb.skip{display:flex;background:var(--gold-g);color:#fcd34d;border:1px solid rgba(245,158,11,0.2);}
+
+/* Actions */
+.actions{display:flex;justify-content:flex-end;gap:9px;margin-top:6px;}
+.btn-skip{padding:10px 18px;border:1.5px solid var(--border);border-radius:9px;background:transparent;color:var(--muted);font-family:'Sora',sans-serif;font-size:12px;cursor:pointer;transition:all 0.15s;}
+.btn-skip:hover{border-color:var(--muted);color:var(--ink);}
+.btn-submit{padding:10px 18px;border:none;border-radius:9px;background:var(--blue);color:#fff;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;box-shadow:0 3px 10px rgba(59,130,246,0.3);}
+.btn-submit:hover{transform:translateY(-1px);}
+.btn-next{padding:10px 22px;border:none;border-radius:9px;background:linear-gradient(135deg,var(--accent),#4f46e5);color:#fff;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;box-shadow:0 3px 10px rgba(99,102,241,0.3);}
+.btn-next:hover{transform:translateY(-1px);}
+.btn-next:disabled{opacity:0.3;cursor:not-allowed;transform:none;}
+
+/* ═══════════════════════════════
+   RESULT SCREEN
+═══════════════════════════════ */
+#resultScreen{align-items:center;justify-content:center;padding:36px 18px;gap:18px;}
+
+.r-card{
+  background:var(--s1);border:1px solid var(--border);border-radius:20px;
+  padding:38px 34px;max-width:620px;width:100%;text-align:center;
+  box-shadow:0 0 60px rgba(99,102,241,0.08);position:relative;overflow:hidden;
+}
+.r-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--cyan),var(--green));}
+
+.trophy{font-size:58px;display:block;margin-bottom:10px;animation:bb 1.2s ease infinite alternate;}
+@keyframes bb{from{transform:translateY(0);}to{transform:translateY(-8px);}}
+
+.r-name{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:3px;}
+.r-sub{color:var(--muted);font-size:13px;margin-bottom:22px;}
+
+.score-donut{
+  width:110px;height:110px;border-radius:50%;margin:0 auto 20px;
+  background:conic-gradient(var(--accent) 0%, var(--cyan) 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 0 40px rgba(99,102,241,0.35);
+  position:relative;
+}
+.score-donut::before{
+  content:'';position:absolute;inset:6px;border-radius:50%;background:var(--s1);
+}
+.score-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;}
+.score-pct{font-size:26px;font-weight:800;line-height:1;}
+.score-lbl{font-size:9px;letter-spacing:1px;color:var(--muted);margin-top:2px;}
+
+.grade-pill{display:inline-block;padding:5px 20px;border-radius:50px;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:20px;}
+.gA{background:var(--green-g);color:var(--green);border:1px solid rgba(16,185,129,0.3);}
+.gB{background:var(--blue-g);color:var(--blue);border:1px solid rgba(59,130,246,0.3);}
+.gC{background:var(--gold-g);color:var(--gold);border:1px solid rgba(245,158,11,0.3);}
+.gD{background:var(--red-g);color:var(--red);border:1px solid rgba(244,63,94,0.3);}
+
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:22px;}
+.stat{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:11px 6px;text-align:center;}
+.stat-n{font-size:17px;font-weight:800;}
+.stat-l{font-size:9px;color:var(--muted);margin-top:2px;}
+.st-g .stat-n{color:var(--green);}
+.st-r .stat-n{color:var(--red);}
+.st-o .stat-n{color:var(--gold);}
+.st-b .stat-n{color:var(--blue);}
+.st-p .stat-n{color:var(--accent);}
+
+/* Type breakdown */
+.type-breakdown{
+  background:var(--s2);border:1px solid var(--border);border-radius:12px;
+  padding:14px 16px;margin-bottom:20px;text-align:left;
+}
+.tb-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.tb-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.tb-row:last-child{border-bottom:none;padding-bottom:0;}
+.tb-type{color:var(--ink);}
+.tb-score{font-weight:700;}
+
+.r-actions{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;}
+.rb{padding:11px 22px;border-radius:9px;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.rb-retry{background:linear-gradient(135deg,var(--accent),#4f46e5);color:#fff;border:none;box-shadow:0 3px 12px rgba(99,102,241,0.3);}
+.rb-retry:hover{transform:translateY(-2px);}
+.rb-review{background:transparent;color:var(--blue);border:1.5px solid var(--blue);}
+.rb-review:hover{background:var(--blue-g);}
+.rb-xl{background:#217346;color:#fff;border:none;box-shadow:0 3px 12px rgba(33,115,70,0.3);}
+.rb-xl:hover{transform:translateY(-2px);}
+.rb-gs{background:#1a73e8;color:#fff;border:none;box-shadow:0 3px 12px rgba(26,115,232,0.3);}
+.rb-gs:hover{transform:translateY(-2px);}
+.rb-gs:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+
+/* Sessions panel */
+.sp{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:20px 22px;max-width:620px;width:100%;}
+.sp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sp-title{font-family:'Playfair Display',serif;font-size:17px;}
+.sp-count{font-size:11px;color:var(--muted);}
+.sp-clr{background:none;border:1px solid var(--border);border-radius:7px;padding:4px 11px;font-size:10px;color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;transition:all 0.2s;}
+.sp-clr:hover{border-color:var(--red);color:var(--red);}
+
+.tbl{width:100%;border-collapse:collapse;font-size:11px;}
+.tbl th{background:var(--s2);padding:8px 9px;text-align:left;font-weight:600;color:var(--muted);border-bottom:1px solid var(--border);}
+.tbl td{padding:8px 9px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:rgba(99,102,241,0.04);}
+.pp{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+.del-b{background:none;border:none;color:var(--red);font-size:15px;cursor:pointer;opacity:0.4;transition:opacity 0.2s;}
+.del-b:hover{opacity:1;}
+
+.export-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.exp-btn{padding:10px;border:none;border-radius:9px;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.exp-xl{background:linear-gradient(135deg,#217346,#185c38);color:#fff;box-shadow:0 3px 10px rgba(33,115,70,0.3);}
+.exp-xl:hover{transform:translateY(-1px);}
+.exp-gs{background:linear-gradient(135deg,#1a73e8,#1558b0);color:#fff;box-shadow:0 3px 10px rgba(26,115,232,0.3);}
+.exp-gs:hover{transform:translateY(-1px);}
+.exp-gs:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+
+/* Webhook strip */
+.wh-strip{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:14px 18px;max-width:620px;width:100%;}
+.wh-strip h4{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.wh-row{display:flex;gap:8px;}
+.wh-inp{flex:1;padding:9px 12px;background:var(--s2);border:1px solid var(--border);border-radius:8px;font-family:'Sora',sans-serif;font-size:12px;color:var(--ink);outline:none;}
+.wh-inp:focus{border-color:var(--accent);}
+.wh-save{padding:9px 14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:'Sora',sans-serif;font-size:11px;font-weight:600;cursor:pointer;}
+
+/* ═══════════════════════════════
+   REVIEW SCREEN
+═══════════════════════════════ */
+#reviewScreen{padding:22px 18px 60px;max-width:800px;margin:0 auto;width:100%;}
+.rv-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:10px;}
+.rv-title{font-family:'Playfair Display',serif;font-size:22px;}
+.rv-back{padding:8px 16px;border:1.5px solid var(--border);border-radius:9px;background:transparent;color:var(--ink);font-family:'Sora',sans-serif;font-size:12px;cursor:pointer;transition:all 0.2s;}
+.rv-back:hover{border-color:var(--accent);}
+
+.rv-item{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:11px;}
+.rv-item.ok{border-left:3px solid var(--green);}
+.rv-item.bad{border-left:3px solid var(--red);}
+.rv-item.skip{border-left:3px solid var(--gold);}
+
+.rv-meta{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--muted);margin-bottom:7px;text-transform:uppercase;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.rv-time-pill{font-size:10px;background:var(--s2);border:1px solid var(--border);border-radius:20px;padding:2px 8px;color:var(--muted);}
+.rv-pts{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.rv-q{font-size:14px;font-weight:500;margin-bottom:10px;}
+.rv-code{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#e2e8f0;white-space:pre-wrap;}
+.rv-albl{font-size:9px;font-weight:700;letter-spacing:0.5px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;}
+.rv-ans{font-size:12px;padding:6px 11px;border-radius:7px;margin-bottom:5px;}
+.rv-ans.ok{background:var(--green-g);color:#6ee7b7;}
+.rv-ans.bad{background:var(--red-g);color:#fda4af;}
+.rv-ans.ca{background:var(--green-g);color:#6ee7b7;}
+.neg-note{font-size:10px;color:var(--red);margin-top:5px;opacity:0.8;}
+
+/* Spinner */
+.spin-ov{position:fixed;inset:0;background:rgba(11,13,18,0.88);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:200;gap:14px;}
+.spin{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp 0.8s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.spin-txt{font-size:13px;color:var(--muted);}
+
+/* Confetti */
+.cf-c{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden;}
+.cf{position:absolute;animation:cf-fall linear forwards;}
+@keyframes cf-fall{0%{transform:translateY(-30px) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:300;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--s1);border:1px solid var(--border);border-radius:16px;max-width:560px;width:100%;padding:26px;max-height:85vh;overflow-y:auto;}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.modal-title{font-family:'Playfair Display',serif;font-size:17px;}
+.modal-x{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;}
+.modal p{font-size:12px;color:var(--muted);line-height:1.75;margin-bottom:10px;}
+pre.script{background:#0d1117;border:1px solid var(--border);border-radius:10px;padding:14px;font-size:11px;color:#c4b5fd;white-space:pre-wrap;line-height:1.7;overflow-x:auto;}
+.copy-btn{float:right;background:var(--accent);border:none;border-radius:6px;padding:4px 11px;color:#fff;font-size:10px;cursor:pointer;font-family:'Sora',sans-serif;margin-bottom:6px;}
+
+@media(max-width:580px){
+  .opts-grid{grid-template-columns:1fr;}
+  .stats-row{grid-template-columns:repeat(3,1fr);}
+  .meta-grid{grid-template-columns:repeat(2,1fr);}
+  .setup-card,.r-card{padding:28px 18px;}
+  .r-actions,.rb{flex-direction:column;width:100%;}
+  .export-row{grid-template-columns:1fr;}
+  .tf-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="cf-c" id="cfC"></div>
+
+<!-- Modal: Apps Script -->
+<div class="modal-bg" id="scriptModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Google Apps Script</div>
+      <button class="modal-x" onclick="closeModal()">×</button>
+    </div>
+    <p><strong style="color:var(--ink)">Setup steps:</strong><br>
+      1. Open your Google Sheet → Extensions → Apps Script<br>
+      2. Replace all code with the script below<br>
+      3. Click Deploy → New Deployment → Web App<br>
+      4. Set "Who has access" → <strong style="color:var(--ink)">Anyone</strong><br>
+      5. Copy the Web App URL → paste in quiz setup
+    </p>
+    <button class="copy-btn" onclick="copyScript()">Copy Script</button>
+    <pre class="script" id="scriptTxt">function doPost(e) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
+
+    if (sheet.getLastRow() === 0) {
+      var headers = [
+        'Timestamp','Name','Email','Score','Max Score','%','Grade',
+        'Correct','Wrong','Skipped','Neg Deducted',
+        'Radio Score','Radio Correct','Radio Wrong',
+        'TF Score','TF Correct','TF Wrong',
+        'Multi Score','Multi Correct','Multi Wrong',
+        'Code Score','Code Correct','Code Wrong'
+      ];
+      for (var i = 1; i &lt;= 30; i++) {
+        headers.push('Q'+i+' Result', 'Q'+i+' Pts', 'Q'+i+' Time(s)');
+      }
+      sheet.appendRow(headers);
+      sheet.getRange(1,1,1,headers.length)
+        .setFontWeight('bold').setBackground('#1e1a2e').setFontColor('#ffffff');
+      sheet.setFrozenRows(1);
+    }
+
+    var row = [
+      data.timestamp, data.name, data.email,
+      data.score, data.maxScore, data.pct+'%', data.grade,
+      data.correct, data.wrong, data.skipped, data.negDed,
+      data.byType.radio.score, data.byType.radio.correct, data.byType.radio.wrong,
+      data.byType.tf.score, data.byType.tf.correct, data.byType.tf.wrong,
+      data.byType.multi.score, data.byType.multi.correct, data.byType.multi.wrong,
+      data.byType.code.score, data.byType.code.correct, data.byType.code.wrong
+    ];
+    data.qs.forEach(function(q){ row.push(q.result, q.pts, q.time); });
+    sheet.appendRow(row);
+
+    var lr = sheet.getLastRow();
+    var p = parseFloat(data.pct);
+    var bg = p>=75?'#d1fae5':p>=50?'#fef9c3':'#fee2e2';
+    sheet.getRange(lr,6).setBackground(bg);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ok:true}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ok:false,err:err.message}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- Spinner -->
+<div class="spin-ov" id="spinOv" style="display:none;">
+  <div class="spin"></div>
+  <div class="spin-txt" id="spinTxt">Sending…</div>
+</div>
+
+<!-- ═══════════ SETUP ═══════════ -->
+<div class="screen active" id="setupScreen">
+  <div class="setup-card">
+    <div class="brand-tag">🧠 QuizMaster Pro</div>
+    <h1 class="setup-h">Test Your <em>Knowledge</em></h1>
+    <p class="setup-sub">30 questions · Radio · True/False · Multi-Select · Code Output · Individual timers · Negative marking · Google Sheets sync</p>
+
+    <div class="meta-grid">
+      <div class="m-box"><div class="m-ico">⊙</div><div class="m-val">20</div><div class="m-lab">Radio</div></div>
+      <div class="m-box"><div class="m-ico">◉</div><div class="m-val">5</div><div class="m-lab">True/False</div></div>
+      <div class="m-box"><div class="m-ico">☑</div><div class="m-val">2</div><div class="m-lab">Multi-Select</div></div>
+      <div class="m-box"><div class="m-ico">⌨</div><div class="m-val">3</div><div class="m-lab">Code Output</div></div>
+    </div>
+
+    <div class="neg-strip">
+      ⚠️ <span><strong>Negative Marking:</strong> Radio +10/−3 · True/False +10/−3 · Multi-Select +10/−3 · Code +10/−3 · Skip = 0 pts · Score floor = 0</span>
+    </div>
+
+    <label class="inp-label">Candidate Name *</label>
+    <input class="inp" id="pName" placeholder="e.g. Arjun Sharma" maxlength="50"/>
+
+    <label class="inp-label">Email (optional)</label>
+    <input class="inp" id="pEmail" placeholder="candidate@email.com" type="email"/>
+
+    <label class="inp-label">Google Sheets Webhook URL <span class="help-link" onclick="openModal()" style="margin-left:6px;">How to set up →</span></label>
+    <input class="inp" id="webhookInp" placeholder="https://script.google.com/macros/s/…/exec" style="font-size:11px;"/>
+
+    <button class="start-btn" onclick="startQuiz()" style="margin-top:8px;">Begin Quiz →</button>
+  </div>
+</div>
+
+<!-- ═══════════ QUIZ ═══════════ -->
+<div class="screen" id="quizScreen">
+  <div class="topbar">
+    <div class="prog-wrap">
+      <div class="prog-top">
+        <span class="q-label" id="qLbl">Q1 of 30</span>
+        <div class="chips">
+          <span class="chip chip-g" id="chipS">Score: 0</span>
+          <span class="chip chip-r" id="chipN">−0 neg</span>
+          <span class="chip chip-m" id="chipT">⏱ 20s</span>
+        </div>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="pFill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-ring">
+      <svg class="t-svg" viewBox="0 0 58 58">
+        <circle class="t-bg" cx="29" cy="29" r="26"/>
+        <circle class="t-arc" id="tArc" cx="29" cy="29" r="26"/>
+      </svg>
+      <div class="t-num" id="tNum">20</div>
+    </div>
+  </div>
+
+  <div class="fb" id="fb"></div>
+  <div class="q-card" id="qCard"></div>
+  <div class="actions">
+    <button class="btn-skip" id="bSkip" onclick="doSkip()">Skip (0 pts)</button>
+    <button class="btn-submit" id="bSubmit" onclick="doSubmit()" style="display:none">Check Answer</button>
+    <button class="btn-next" id="bNext" onclick="doNext()" disabled>Next →</button>
+  </div>
+</div>
+
+<!-- ═══════════ RESULT ═══════════ -->
+<div class="screen" id="resultScreen"></div>
+
+<!-- ═══════════ REVIEW ═══════════ -->
+<div class="screen" id="reviewScreen"></div>
+
+<script>
+// ═══════════════════════════════════════
+// QUESTIONS — 20 Radio + 5 TF + 2 Multi + 3 Code = 30
+// ═══════════════════════════════════════
+const Q = [
+
+  // ── RADIO ×20 ──────────────────────────────────────────────
+  {type:'radio',timeLimit:20,neg:3,
+   text:'What is the capital city of France?',
+   opts:['London','Berlin','Paris','Madrid'],correct:2},
+
+  {type:'radio',timeLimit:15,neg:3,
+   text:'Which planet is known as the Red Planet?',
+   opts:['Venus','Mars','Jupiter','Saturn'],correct:1},
+
+  {type:'radio',timeLimit:20,neg:3,
+   text:'Who painted the Mona Lisa?',
+   opts:['Van Gogh','Picasso','Leonardo da Vinci','Michelangelo'],correct:2},
+
+  {type:'radio',timeLimit:15,neg:3,
+   text:'What is the largest ocean on Earth?',
+   opts:['Atlantic','Indian','Arctic','Pacific'],correct:3},
+
+  {type:'radio',timeLimit:20,neg:3,
+   text:'In which year did World War II end?',
+   opts:['1943','1944','1945','1946'],correct:2},
+
+  {type:'radio',timeLimit:18,neg:3,
+   text:'What is the chemical symbol for Gold?',
+   opts:['Ag','Fe','Au','Cu'],correct:2},
+
+  {type:'radio',timeLimit:20,neg:3,
+   text:'Who wrote "Romeo and Juliet"?',
+   opts:['Charles Dickens','William Shakespeare','Jane Austen','Homer'],correct:1},
+
+  {type:'radio',timeLimit:18,neg:3,
+   text:'What is the approximate speed of light?',
+   opts:['150,000 km/s','300,000 km/s','500,000 km/s','1,000,000 km/s'],correct:1},
+
+  {type:'radio',timeLimit:15,neg:3,
+   text:'What is the hardest natural substance on Earth?',
+   opts:['Gold','Titanium','Diamond','Quartz'],correct:2},
+
+  {type:'radio',timeLimit:18,neg:3,
+   text:'Which continent has the most countries?',
+   opts:['Asia','Africa','Europe','Americas'],correct:1},
+
+  {type:'radio',timeLimit:20,neg:3,
+   text:'What does DNA stand for?',
+   opts:['Deoxyribonucleic Acid','Dinucleotide Acid','Dual Nucleic Array','Dynamic Nucleic Acid'],correct:0},
+
+  {type:'radio',timeLimit:18,neg:3,
+   text:'Which organ in the human body produces insulin?',
+   opts:['Liver','Kidney','Pancreas','Heart'],correct:2},
+
+  {type:'radio',timeLimit:20,neg:3,
+   text:'How many elements are in the periodic table?',
+   opts:['108','118','128','138'],correct:1},
+
+  {type:'radio',timeLimit:20,neg:3,
+   text:'Who developed the theory of relativity?',
+   opts:['Isaac Newton','Nikola Tesla','Albert Einstein','Niels Bohr'],correct:2},
+
+  {type:'radio',timeLimit:15,neg:3,
+   text:'What is the powerhouse of the cell?',
+   opts:['Nucleus','Ribosome','Mitochondria','Golgi Apparatus'],correct:2},
+
+  {type:'radio',timeLimit:18,neg:3,
+   text:'In which year was the World Wide Web invented?',
+   opts:['1983','1989','1995','2000'],correct:1},
+
+  {type:'radio',timeLimit:20,neg:3,
+   text:'What is the largest planet in our solar system?',
+   opts:['Saturn','Neptune','Uranus','Jupiter'],correct:3},
+
+  {type:'radio',timeLimit:15,neg:3,
+   text:'How many bones are in the adult human body?',
+   opts:['186','196','206','216'],correct:2},
+
+  {type:'radio',timeLimit:18,neg:3,
+   text:'What is the currency of Japan?',
+   opts:['Yuan','Won','Yen','Ringgit'],correct:2},
+
+  {type:'radio',timeLimit:20,neg:3,
+   text:'Which gas do plants absorb during photosynthesis?',
+   opts:['Oxygen','Nitrogen','Carbon Dioxide','Hydrogen'],correct:2},
+
+  // ── TRUE/FALSE ×5 ──────────────────────────────────────────
+  {type:'truefalse',timeLimit:12,neg:3,
+   text:'The Great Wall of China is visible from space with the naked eye.',correct:false},
+
+  {type:'truefalse',timeLimit:12,neg:3,
+   text:'Sound travels faster than light.',correct:false},
+
+  {type:'truefalse',timeLimit:12,neg:3,
+   text:'Bats are the only mammals capable of sustained flight.',correct:true},
+
+  {type:'truefalse',timeLimit:10,neg:3,
+   text:'Water boils at 100°C at sea level.',correct:true},
+
+  {type:'truefalse',timeLimit:12,neg:3,
+   text:'Mount Everest is the tallest mountain measured from Earth\'s center.',correct:false},
+
+  // ── MULTI-SELECT ×2 ────────────────────────────────────────
+  {type:'multi',timeLimit:30,neg:3,
+   text:'Which of the following are programming languages? (Select ALL that apply)',
+   opts:['Python','HTML','JavaScript','Photoshop','Rust'],correct:[0,2,4]},
+
+  {type:'multi',timeLimit:28,neg:3,
+   text:'Which planets in our solar system have rings? (Select ALL that apply)',
+   opts:['Mercury','Saturn','Uranus','Mars','Neptune'],correct:[1,2,4]},
+
+  // ── CODE OUTPUT ×3 ─────────────────────────────────────────
+  {
+    type:'code', timeLimit:35, neg:3,
+    text:'What is the output of the following Python code?',
+    lang:'Python',
+    code:
+`x = [1, 2, 3, 4, 5]
+print(x[1:4])`,
+    opts:['[1, 2, 3]','[2, 3, 4]','[1, 2, 3, 4]','[2, 3, 4, 5]'],
+    correct:1
+  },
+
+  {
+    type:'code', timeLimit:40, neg:3,
+    text:'What will this JavaScript snippet print to the console?',
+    lang:'JavaScript',
+    code:
+`function greet(name) {
+  return "Hello, " + name + "!";
+}
+console.log(greet("World"));`,
+    opts:['Hello, World','Hello, World!','greet("World")','undefined'],
+    correct:1
+  },
+
+  {
+    type:'code', timeLimit:45, neg:3,
+    text:'What is the output of this Python code?',
+    lang:'Python',
+    code:
+`def factorial(n):
+    if n == 0:
+        return 1
+    return n * factorial(n - 1)
+
+print(factorial(4))`,
+    opts:['16','24','12','factorial(4)'],
+    correct:1
+  }
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+const CIRC = 2 * Math.PI * 26;
+const PTS  = 10;
+
+let cQ=0, score=0, negDed=0, timer=null, answered=false;
+let userAns=[], timeTaken=[], qStart=0;
+let sessions=[];
+let pName='', pEmail='', webhookUrl='';
+
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function openModal(){ document.getElementById('scriptModal').classList.add('open'); }
+function closeModal(){ document.getElementById('scriptModal').classList.remove('open'); }
+function copyScript(){
+  navigator.clipboard.writeText(document.getElementById('scriptTxt').innerText)
+    .then(()=>alert('Script copied to clipboard!'));
+}
+
+// ═══════════════════════════════════════
+// START
+// ═══════════════════════════════════════
+function startQuiz(){
+  pName    = document.getElementById('pName').value.trim() || 'Candidate';
+  pEmail   = document.getElementById('pEmail').value.trim() || '';
+  webhookUrl = document.getElementById('webhookInp').value.trim();
+  cQ=0; score=0; negDed=0; userAns=[]; timeTaken=[];
+  showScreen('quizScreen');
+  loadQ();
+}
+
+// ═══════════════════════════════════════
+// LOAD QUESTION
+// ═══════════════════════════════════════
+function loadQ(){
+  const q = Q[cQ];
+  answered = false;
+  clearFB();
+  updateBar();
+  document.getElementById('qCard').innerHTML = buildCard(q);
+  document.getElementById('bSkip').style.display = '';
+  document.getElementById('bNext').disabled = true;
+  document.getElementById('bNext').textContent = cQ === Q.length-1 ? 'Finish 🎉' : 'Next →';
+  const needsSubmit = ['multi'].includes(q.type);
+  document.getElementById('bSubmit').style.display = needsSubmit ? '' : 'none';
+  startTimer(q.timeLimit);
+  qStart = Date.now();
+}
+
+// ═══════════════════════════════════════
+// BUILD CARD HTML
+// ═══════════════════════════════════════
+function buildCard(q){
+  const tClass = {radio:'qb-radio',multi:'qb-multi',truefalse:'qb-tf',code:'qb-code'};
+  const tName  = {radio:'⊙ Single Choice',multi:'☑ Multi-Select',truefalse:'◉ True / False',code:'⌨ Code Output'};
+
+  let h = `<div class="q-meta">
+    <span class="qbadge ${tClass[q.type]}">${tName[q.type]}</span>
+    <span class="qbadge qb-time">⏱ ${q.timeLimit}s</span>
+    <span class="qbadge qb-neg">−${q.neg} if wrong</span>
+  </div>`;
+
+  h += `<div class="q-text">${q.text}</div>`;
+
+  // Code block
+  if(q.type === 'code'){
+    h += `<div class="code-block">
+      <span class="code-lang">${q.lang}</span>
+      <div class="code-body">${syntaxHL(q.code, q.lang)}</div>
+    </div>
+    <div class="output-label">What is the output?</div>`;
+  }
+
+  // Options
+  if(q.type === 'radio' || q.type === 'code'){
+    const isCode = q.type === 'code';
+    h += `<div class="opts-grid ${isCode?'col1':''}">`;
+    q.opts.forEach((o,i)=>{
+      h += `<button class="opt ${isCode?'code-opt':''}" onclick="pickRadio(this,${i})" data-i="${i}">
+        <span class="opt-key">${String.fromCharCode(65+i)}</span>
+        <span>${isCode ? '<code style="font-family:JetBrains Mono,monospace;font-size:12px;">'+escHTML(o)+'</code>' : o}</span>
+      </button>`;
+    });
+    h += `</div>`;
+
+  } else if(q.type === 'truefalse'){
+    h += `<div class="tf-row">
+      <button class="tf t-btn" onclick="pickTF(this,true)">✓ True</button>
+      <button class="tf f-btn" onclick="pickTF(this,false)">✗ False</button>
+    </div>`;
+
+  } else if(q.type === 'multi'){
+    h += `<div class="cbox-list">`;
+    q.opts.forEach((o,i)=>{
+      h += `<div class="copt" onclick="toggleC(this,${i})" data-i="${i}" data-on="0">
+        <div class="cbox"></div><span>${o}</span></div>`;
+    });
+    h += `</div>`;
+  }
+  return h;
+}
+
+// ═══════════════════════════════════════
+// SYNTAX HIGHLIGHT (simple)
+// ═══════════════════════════════════════
+function escHTML(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function syntaxHL(code, lang){
+  let s = escHTML(code);
+  if(lang==='Python'){
+    s = s
+      .replace(/\b(def|return|if|else|elif|for|while|in|import|from|class|pass|None|True|False|and|or|not|print)\b/g,'<span class="kw">$1</span>')
+      .replace(/\b(\d+)\b/g,'<span class="nm">$1</span>')
+      .replace(/(#[^\n]*)/g,'<span class="cm">$1</span>')
+      .replace(/(".*?"|'.*?')/g,'<span class="st">$1</span>');
+  } else if(lang==='JavaScript'){
+    s = s
+      .replace(/\b(function|return|var|let|const|if|else|for|while|console|log|true|false|null|undefined|new|typeof|class|this)\b/g,'<span class="kw">$1</span>')
+      .replace(/\b(\d+)\b/g,'<span class="nm">$1</span>')
+      .replace(/(\/\/[^\n]*)/g,'<span class="cm">$1</span>')
+      .replace(/(".*?"|'.*?'|`.*?`)/g,'<span class="st">$1</span>');
+  }
+  return s;
+}
+
+// ═══════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════
+function pickRadio(btn, idx){
+  if(answered) return;
+  document.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  const q = Q[cQ];
+  const ok = idx === q.correct;
+  commit(ok, q.opts[idx], q.opts[q.correct]);
+  revealRadio(q);
+}
+
+function pickTF(btn, val){
+  if(answered) return;
+  document.querySelectorAll('.tf').forEach(b=>{b.classList.remove('sel-t','sel-f'); b.disabled=true;});
+  btn.classList.add(val ? 'sel-t' : 'sel-f');
+  const q = Q[cQ];
+  const ok = val === q.correct;
+  commit(ok, val?'True':'False', q.correct?'True':'False');
+  btn.classList.add(ok ? 'correct' : 'wrong-a');
+  if(!ok) revealTF(q);
+}
+
+function toggleC(el, idx){
+  if(answered) return;
+  const on = el.dataset.on==='1';
+  el.dataset.on = on ? '0' : '1';
+  const cb = el.querySelector('.cbox');
+  if(!on){ el.classList.add('on'); cb.textContent='✓'; }
+  else  { el.classList.remove('on'); cb.textContent=''; }
+}
+
+function doSubmit(){
+  if(answered) return;
+  const q = Q[cQ];
+  if(q.type==='multi'){
+    const sel = [...document.querySelectorAll('.copt[data-on="1"]')].map(e=>parseInt(e.dataset.i));
+    if(!sel.length){ alert('Please select at least one option.'); return; }
+    const ok = JSON.stringify(sel.sort()) === JSON.stringify([...q.correct].sort());
+    revealMulti(q, sel);
+    commit(ok, sel.map(i=>q.opts[i]).join(', '), q.correct.map(i=>q.opts[i]).join(', '));
+  }
+  document.getElementById('bSubmit').style.display = 'none';
+}
+
+function commit(ok, ua, ca){
+  stopTimer();
+  answered = true;
+  const elapsed = Math.min(Math.round((Date.now()-qStart)/1000), Q[cQ].timeLimit);
+  timeTaken[cQ] = elapsed;
+
+  if(ok){
+    score += PTS;
+    showFB('ok', `✅ Correct! +${PTS} points`);
+  } else {
+    const pen = Q[cQ].neg;
+    score = Math.max(0, score - pen);
+    negDed += pen;
+    showFB('bad', `❌ Wrong! −${pen} pts · Correct: ${ca}`);
+  }
+  userAns[cQ] = { answered:true, correct:ok, ua, ca, pts: ok?PTS:-Q[cQ].neg, timeTaken:elapsed };
+  document.getElementById('bNext').disabled = false;
+  document.getElementById('bSkip').style.display = 'none';
+  updateBar();
+}
+
+function doSkip(){
+  if(answered) return;
+  stopTimer();
+  answered = true;
+  const elapsed = Math.min(Math.round((Date.now()-qStart)/1000), Q[cQ].timeLimit);
+  timeTaken[cQ] = elapsed;
+  const q = Q[cQ];
+  let ca = '';
+  if(['radio','code'].includes(q.type)) ca = q.opts[q.correct];
+  else if(q.type==='truefalse') ca = q.correct?'True':'False';
+  else if(q.type==='multi') ca = q.correct.map(i=>q.opts[i]).join(', ');
+  userAns[cQ] = { answered:false, correct:false, skipped:true, ua:'—', ca, pts:0, timeTaken:elapsed };
+  showFB('skip','⏭ Skipped — 0 points');
+  document.getElementById('bNext').disabled = false;
+  document.getElementById('bSkip').style.display = 'none';
+  document.getElementById('bSubmit').style.display = 'none';
+}
+
+function doNext(){
+  if(!answered) return;
+  cQ++;
+  if(cQ >= Q.length){ saveSession(); showResults(); return; }
+  loadQ();
+}
+
+// ═══════════════════════════════════════
+// REVEAL HELPERS
+// ═══════════════════════════════════════
+function revealRadio(q){
+  document.querySelectorAll('.opt').forEach(b=>{
+    b.disabled = true;
+    const i = parseInt(b.dataset.i);
+    if(i===q.correct) b.classList.add('show-ok');
+    else if(b.classList.contains('sel')) b.classList.add('bad');
+  });
+}
+function revealTF(q){
+  document.querySelectorAll('.tf').forEach(b=>{
+    if((b.classList.contains('t-btn')&&q.correct===true)||(b.classList.contains('f-btn')&&q.correct===false))
+      b.classList.add('correct');
+  });
+}
+function revealMulti(q, sel){
+  document.querySelectorAll('.copt').forEach(el=>{
+    const i = parseInt(el.dataset.i); el.onclick = null;
+    if(q.correct.includes(i)&&sel.includes(i)) el.classList.add('ok');
+    else if(!q.correct.includes(i)&&sel.includes(i)) el.classList.add('bad');
+    else if(q.correct.includes(i)) el.classList.add('show-ok');
+  });
+}
+
+// ═══════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════
+function startTimer(lim){
+  let left = lim; updateTimer(left, lim);
+  timer = setInterval(()=>{
+    left--;
+    updateTimer(left, lim);
+    if(left<=0){ clearInterval(timer); onTimeout(); }
+  }, 1000);
+}
+function stopTimer(){ clearInterval(timer); }
+
+function onTimeout(){
+  if(answered) return;
+  timeTaken[cQ] = Q[cQ].timeLimit;
+  const q = Q[cQ];
+  let ca = '';
+  if(['radio','code'].includes(q.type)) ca = q.opts[q.correct];
+  else if(q.type==='truefalse') ca = q.correct?'True':'False';
+  else if(q.type==='multi') ca = q.correct.map(i=>q.opts[i]).join(', ');
+  answered = true;
+  userAns[cQ] = { answered:false, correct:false, timeout:true, ua:'—', ca, pts:0, timeTaken:Q[cQ].timeLimit };
+  showFB('skip','⏰ Time\'s up! 0 points');
+  document.getElementById('bNext').disabled = false;
+  document.getElementById('bSkip').style.display = 'none';
+  document.getElementById('bSubmit').style.display = 'none';
+}
+
+function updateTimer(left, lim){
+  const arc = document.getElementById('tArc'), num = document.getElementById('tNum');
+  if(!arc||!num) return;
+  arc.style.strokeDashoffset = CIRC * (1 - left/lim);
+  const danger = left <= Math.max(3, Math.floor(lim*0.2));
+  const warn   = left <= Math.max(6, Math.floor(lim*0.35));
+  arc.style.stroke = danger ? '#f43f5e' : warn ? '#f59e0b' : '#10b981';
+  num.style.color  = danger ? '#f43f5e' : 'var(--ink)';
+  num.textContent = left;
+}
+
+// ═══════════════════════════════════════
+// FEEDBACK & BAR
+// ═══════════════════════════════════════
+function showFB(cls, msg){
+  const el = document.getElementById('fb');
+  el.className = `fb ${cls}`; el.innerHTML = msg; updateBar();
+}
+function clearFB(){
+  const el = document.getElementById('fb'); el.className = 'fb'; el.innerHTML = '';
+}
+function updateBar(){
+  document.getElementById('qLbl').textContent  = `Q${cQ+1} of ${Q.length}`;
+  document.getElementById('chipS').textContent  = `Score: ${score}`;
+  document.getElementById('chipN').textContent  = `−${negDed} neg`;
+  document.getElementById('chipT').textContent  = `⏱ ${Q[cQ].timeLimit}s`;
+  document.getElementById('pFill').style.width  = `${(cQ/Q.length)*100}%`;
+}
+
+// ═══════════════════════════════════════
+// SAVE SESSION
+// ═══════════════════════════════════════
+function saveSession(){
+  const correct = userAns.filter(a=>a&&a.correct).length;
+  const wrong   = userAns.filter(a=>a&&!a.correct&&!a.skipped&&!a.timeout).length;
+  const skipped = userAns.filter(a=>a&&(a.skipped||a.timeout)).length;
+  const pct     = Math.round((score/(Q.length*PTS))*100);
+  const grade   = pct>=90?'A+':pct>=75?'B':pct>=50?'C':'D';
+
+  // Per-type breakdown
+  const byType = {
+    radio:{ score:0, correct:0, wrong:0 },
+    tf:   { score:0, correct:0, wrong:0 },
+    multi:{ score:0, correct:0, wrong:0 },
+    code: { score:0, correct:0, wrong:0 }
+  };
+  Q.forEach((q,i)=>{
+    const ua = userAns[i]||{};
+    const key = q.type==='truefalse'?'tf':q.type==='code'?'code':q.type==='multi'?'multi':'radio';
+    if(ua.correct){ byType[key].score+=PTS; byType[key].correct++; }
+    else if(!ua.skipped&&!ua.timeout){ byType[key].wrong++; }
+  });
+
+  sessions.push({
+    name:pName, email:pEmail,
+    date:new Date().toLocaleString(),
+    score, maxScore:Q.length*PTS, pct, grade,
+    correct, wrong, skipped, negDed,
+    byType,
+    answers:[...userAns],
+    timeTaken:[...timeTaken]
+  });
+}
+
+// ═══════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════
+function showResults(){
+  stopTimer();
+  showScreen('resultScreen');
+  const s = sessions[sessions.length-1];
+  const emoji  = s.pct>=90?'🏆':s.pct>=75?'🎉':s.pct>=50?'👍':'💪';
+  const tag    = s.pct>=90?'Outstanding!':s.pct>=75?'Great work!':s.pct>=50?'Good effort!':'Keep practising!';
+  const gCls   = s.pct>=90?'gA':s.pct>=75?'gB':s.pct>=50?'gC':'gD';
+
+  const el = document.getElementById('resultScreen');
+  el.innerHTML=`
+    <div class="r-card">
+      <span class="trophy">${emoji}</span>
+      <div class="r-name">${s.name}</div>
+      <div class="r-sub">${tag}${s.email?' · '+s.email:''}</div>
+      <div class="score-donut">
+        <div class="score-inner">
+          <div class="score-pct">${s.pct}%</div>
+          <div class="score-lbl">SCORE</div>
+        </div>
+      </div>
+      <div class="grade-pill ${gCls}">Grade: ${s.grade}</div>
+      <div class="stats-row">
+        <div class="stat st-g"><div class="stat-n">${s.correct}</div><div class="stat-l">Correct</div></div>
+        <div class="stat st-r"><div class="stat-n">${s.wrong}</div><div class="stat-l">Wrong</div></div>
+        <div class="stat st-o"><div class="stat-n">${s.skipped}</div><div class="stat-l">Skipped</div></div>
+        <div class="stat st-b"><div class="stat-n">${s.score}/${s.maxScore}</div><div class="stat-l">Points</div></div>
+        <div class="stat st-p"><div class="stat-n">−${s.negDed}</div><div class="stat-l">Negative</div></div>
+      </div>
+      <div class="type-breakdown">
+        <div class="tb-title">Score by Question Type</div>
+        <div class="tb-row"><span class="tb-type">⊙ Radio (×20)</span><span class="tb-score" style="color:var(--gold)">${s.byType.radio.score}/200 · ${s.byType.radio.correct}✓ ${s.byType.radio.wrong}✗</span></div>
+        <div class="tb-row"><span class="tb-type">◉ True/False (×5)</span><span class="tb-score" style="color:var(--accent)">${s.byType.tf.score}/50 · ${s.byType.tf.correct}✓ ${s.byType.tf.wrong}✗</span></div>
+        <div class="tb-row"><span class="tb-type">☑ Multi-Select (×2)</span><span class="tb-score" style="color:var(--blue)">${s.byType.multi.score}/20 · ${s.byType.multi.correct}✓ ${s.byType.multi.wrong}✗</span></div>
+        <div class="tb-row"><span class="tb-type">⌨ Code Output (×3)</span><span class="tb-score" style="color:var(--cyan)">${s.byType.code.score}/30 · ${s.byType.code.correct}✓ ${s.byType.code.wrong}✗</span></div>
+      </div>
+      <div class="r-actions">
+        <button class="rb rb-retry" onclick="startQuiz()">Try Again</button>
+        <button class="rb rb-review" onclick="showReview()">Review</button>
+        <button class="rb rb-xl" onclick="exportOneXL()">📊 Excel</button>
+        <button class="rb rb-gs" id="bSendOne" onclick="sendSheets(sessions.length-1)" ${!webhookUrl?'disabled title="Add webhook URL"':''}>🔗 Send to Sheets</button>
+      </div>
+    </div>
+
+    <div class="sp" id="spanel">
+      <div class="sp-head">
+        <div class="sp-title">All Candidates</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="sp-count" id="spCount"></span>
+          <button class="sp-clr" onclick="clrAll()">Clear All</button>
+        </div>
+      </div>
+      <div id="spTbl"></div>
+      <div class="export-row">
+        <button class="exp-btn exp-xl" onclick="exportAllXL()">📊 Export All → Excel</button>
+        <button class="exp-btn exp-gs" id="bSendAll" onclick="sendAllSheets()" ${!webhookUrl?'disabled title="Add webhook URL"':''}>🔗 Send All → Google Sheets</button>
+      </div>
+    </div>
+
+    <div class="wh-strip">
+      <h4>🔗 Google Sheets Webhook</h4>
+      <div class="wh-row">
+        <input class="wh-inp" id="liveWH" value="${webhookUrl}" placeholder="https://script.google.com/macros/s/…/exec"/>
+        <button class="wh-save" onclick="saveWH()">Save</button>
+      </div>
+    </div>`;
+
+  renderSP();
+  if(s.pct>=75) confetti();
+  if(webhookUrl) sendSheets(sessions.length-1, true);
+}
+
+function saveWH(){
+  webhookUrl = document.getElementById('liveWH').value.trim();
+  document.getElementById('webhookInp').value = webhookUrl;
+  const b = document.getElementById('bSendAll');
+  if(b){ b.disabled=!webhookUrl; }
+  const b2 = document.getElementById('bSendOne');
+  if(b2){ b2.disabled=!webhookUrl; }
+  alert(webhookUrl?'✅ Webhook saved!':'Webhook cleared.');
+}
+
+// ═══════════════════════════════════════
+// SESSIONS TABLE
+// ═══════════════════════════════════════
+function renderSP(){
+  const wrap = document.getElementById('spTbl');
+  if(!wrap) return;
+  document.getElementById('spCount').textContent = `${sessions.length} session(s)`;
+  if(!sessions.length){ wrap.innerHTML='<p style="color:var(--muted);font-size:12px;text-align:center;padding:14px;">No sessions yet.</p>'; return; }
+  const pCol = p => p>=75?'background:rgba(16,185,129,0.2);color:#6ee7b7':p>=50?'background:rgba(245,158,11,0.2);color:#fcd34d':'background:rgba(244,63,94,0.2);color:#fda4af';
+  let h=`<table class="tbl"><thead><tr>
+    <th>#</th><th>Candidate</th><th>Date</th><th>Score</th><th>%</th><th>✓</th><th>✗</th><th>⏭</th><th>−Neg</th><th></th>
+  </tr></thead><tbody>`;
+  sessions.forEach((s,i)=>{
+    h+=`<tr>
+      <td>${i+1}</td>
+      <td><strong>${s.name}</strong>${s.email?`<br><span style="font-size:9px;color:var(--muted)">${s.email}</span>`:''}</td>
+      <td style="font-size:10px;color:var(--muted)">${s.date}</td>
+      <td><strong>${s.score}</strong>/${s.maxScore}</td>
+      <td><span class="pp" style="${pCol(s.pct)}">${s.pct}%</span></td>
+      <td style="color:var(--green);font-weight:700">${s.correct}</td>
+      <td style="color:var(--red);font-weight:700">${s.wrong}</td>
+      <td style="color:var(--gold);font-weight:700">${s.skipped}</td>
+      <td style="color:var(--red);font-weight:700">−${s.negDed}</td>
+      <td><button class="del-b" onclick="delS(${i})">×</button></td>
+    </tr>`;
+  });
+  h+=`</tbody></table>`;
+  wrap.innerHTML=h;
+}
+function delS(i){ sessions.splice(i,1); renderSP(); }
+function clrAll(){ if(confirm('Clear all sessions?')){ sessions=[]; renderSP(); } }
+
+// ═══════════════════════════════════════
+// GOOGLE SHEETS SEND
+// ═══════════════════════════════════════
+async function sendSheets(idx, silent=false){
+  if(!webhookUrl){ if(!silent) alert('No webhook URL set.'); return; }
+  const s = sessions[idx];
+  const payload = {
+    timestamp:s.date, name:s.name, email:s.email,
+    score:s.score, maxScore:s.maxScore, pct:s.pct, grade:s.grade,
+    correct:s.correct, wrong:s.wrong, skipped:s.skipped, negDed:s.negDed,
+    byType:s.byType,
+    qs: Q.map((q,i)=>{
+      const ua = s.answers[i]||{};
+      return {
+        result: ua.correct?'Correct':ua.skipped?'Skipped':ua.timeout?'Timeout':'Wrong',
+        pts: ua.pts||0,
+        time: s.timeTaken[i]||0
+      };
+    })
+  };
+  if(!silent){
+    document.getElementById('spinOv').style.display='flex';
+    document.getElementById('spinTxt').textContent=`Sending ${s.name}'s result…`;
+  }
+  try {
+    await fetch(webhookUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(!silent){ document.getElementById('spinOv').style.display='none'; alert(`✅ Sent to Google Sheets!`); }
+  } catch(e){
+    document.getElementById('spinOv').style.display='none';
+    if(!silent) alert('❌ Send failed. Check your webhook URL.');
+  }
+}
+
+async function sendAllSheets(){
+  if(!webhookUrl){ alert('No webhook URL.'); return; }
+  document.getElementById('spinOv').style.display='flex';
+  for(let i=0;i<sessions.length;i++){
+    document.getElementById('spinTxt').textContent=`Sending ${i+1}/${sessions.length}: ${sessions[i].name}…`;
+    await sendSheets(i,true);
+    await new Promise(r=>setTimeout(r,350));
+  }
+  document.getElementById('spinOv').style.display='none';
+  alert(`✅ All ${sessions.length} sessions sent!`);
+}
+
+// ═══════════════════════════════════════
+// EXCEL EXPORT
+// ═══════════════════════════════════════
+const tLabel = {radio:'Radio',multi:'Multi-Select',truefalse:'True/False',code:'Code Output'};
+
+function exportOneXL(){
+  const s = sessions[sessions.length-1];
+  const wb = XLSX.utils.book_new();
+
+  // Summary
+  const sum=[
+    ['QuizMaster Pro — Candidate Report'],[],
+    ['Candidate',s.name],['Email',s.email||'—'],['Date',s.date],
+    ['Score',`${s.score}/${s.maxScore}`],['%',`${s.pct}%`],['Grade',s.grade],
+    ['Correct',s.correct],['Wrong',s.wrong],['Skipped/Timeout',s.skipped],
+    ['Negative Deducted',`−${s.negDed}`],[],
+    ['--- By Type ---'],
+    ['Radio (×20)',`${s.byType.radio.score}/200`,`${s.byType.radio.correct}✓`,`${s.byType.radio.wrong}✗`],
+    ['True/False (×5)',`${s.byType.tf.score}/50`,`${s.byType.tf.correct}✓`,`${s.byType.tf.wrong}✗`],
+    ['Multi-Select (×2)',`${s.byType.multi.score}/20`,`${s.byType.multi.correct}✓`,`${s.byType.multi.wrong}✗`],
+    ['Code Output (×3)',`${s.byType.code.score}/30`,`${s.byType.code.correct}✓`,`${s.byType.code.wrong}✗`],
+  ];
+  const ws1=XLSX.utils.aoa_to_sheet(sum);
+  ws1['!cols']=[{wch:22},{wch:30},{wch:8},{wch:8}];
+  XLSX.utils.book_append_sheet(wb,ws1,'Summary');
+
+  // Q Breakdown
+  const hdr=['Q#','Type','Question','Time Limit(s)','Time Taken(s)','Your Answer','Correct Answer','Result','Points'];
+  const rows=[hdr];
+  Q.forEach((q,i)=>{
+    const ua=s.answers[i]||{};
+    rows.push([i+1, tLabel[q.type], q.type==='code'?q.code:q.text,
+      q.timeLimit, s.timeTaken[i]||0, ua.ua||'—', ua.ca||'',
+      ua.correct?'Correct':ua.skipped?'Skipped':ua.timeout?'Timeout':'Wrong', ua.pts||0]);
+  });
+  const ws2=XLSX.utils.aoa_to_sheet(rows);
+  ws2['!cols']=[{wch:4},{wch:14},{wch:50},{wch:13},{wch:13},{wch:28},{wch:28},{wch:10},{wch:8}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Question Breakdown');
+
+  XLSX.writeFile(wb,`Quiz_${s.name.replace(/\s+/g,'_')}.xlsx`);
+}
+
+function exportAllXL(){
+  if(!sessions.length){ alert('No sessions to export.'); return; }
+  const wb = XLSX.utils.book_new();
+
+  // 1. All Candidates
+  const h1=['#','Name','Email','Date','Score','Max','%','Grade','Correct','Wrong','Skipped','Neg Ded',
+            'Radio Score','Radio ✓','Radio ✗','TF Score','TF ✓','TF ✗','Multi Score','Multi ✓','Multi ✗','Code Score','Code ✓','Code ✗'];
+  const r1=[h1];
+  sessions.forEach((s,i)=>{
+    r1.push([i+1,s.name,s.email||'—',s.date,s.score,s.maxScore,`${s.pct}%`,s.grade,
+      s.correct,s.wrong,s.skipped,`−${s.negDed}`,
+      s.byType.radio.score,s.byType.radio.correct,s.byType.radio.wrong,
+      s.byType.tf.score,s.byType.tf.correct,s.byType.tf.wrong,
+      s.byType.multi.score,s.byType.multi.correct,s.byType.multi.wrong,
+      s.byType.code.score,s.byType.code.correct,s.byType.code.wrong]);
+  });
+  const ws1=XLSX.utils.aoa_to_sheet(r1);
+  ws1['!cols']=[{wch:4},{wch:20},{wch:22},{wch:18},{wch:7},{wch:5},{wch:7},{wch:6},{wch:8},{wch:7},{wch:8},{wch:9},
+    {wch:11},{wch:9},{wch:9},{wch:9},{wch:7},{wch:7},{wch:12},{wch:9},{wch:9},{wch:11},{wch:9},{wch:9}];
+  XLSX.utils.book_append_sheet(wb,ws1,'All Candidates');
+
+  // 2. Score Matrix
+  const mh=['Candidate','Email','Date','Total','%'];
+  Q.forEach((_,i)=>mh.push(`Q${i+1}`));
+  const mr=[mh];
+  sessions.forEach(s=>{
+    const row=[s.name,s.email||'—',s.date,s.score,`${s.pct}%`];
+    Q.forEach((_,i)=>{ const ua=s.answers[i]; row.push(ua?(ua.correct?PTS:(ua.skipped||ua.timeout?0:-Q[i].neg)):0); });
+    mr.push(row);
+  });
+  const ws2=XLSX.utils.aoa_to_sheet(mr);
+  const mc2=[{wch:20},{wch:20},{wch:16},{wch:7},{wch:7}]; Q.forEach(()=>mc2.push({wch:6}));
+  ws2['!cols']=mc2;
+  XLSX.utils.book_append_sheet(wb,ws2,'Score Matrix');
+
+  // 3. Time Per Question
+  const th=['Candidate','Date']; Q.forEach((q,i)=>th.push(`Q${i+1}(max ${q.timeLimit}s)`));
+  const tr=[th];
+  sessions.forEach(s=>{ const row=[s.name,s.date]; Q.forEach((_,i)=>row.push(s.timeTaken[i]||0)); tr.push(row); });
+  const ws3=XLSX.utils.aoa_to_sheet(tr);
+  const mc3=[{wch:20},{wch:16}]; Q.forEach(()=>mc3.push({wch:12}));
+  ws3['!cols']=mc3;
+  XLSX.utils.book_append_sheet(wb,ws3,'Time Per Question');
+
+  // 4. Detailed Answers
+  const dh=['Candidate','Email','Date','Q#','Type','Question/Code','Time Limit','Time Taken','Your Answer','Correct Answer','Result','Points'];
+  const dr=[dh];
+  sessions.forEach(s=>{
+    Q.forEach((q,i)=>{
+      const ua=s.answers[i]||{};
+      dr.push([s.name,s.email||'—',s.date,i+1,tLabel[q.type],
+        q.type==='code'?q.code:q.text,
+        q.timeLimit,s.timeTaken[i]||0,ua.ua||'—',ua.ca||'',
+        ua.correct?'Correct':ua.skipped?'Skipped':ua.timeout?'Timeout':'Wrong',ua.pts||0]);
+    });
+  });
+  const ws4=XLSX.utils.aoa_to_sheet(dr);
+  ws4['!cols']=[{wch:18},{wch:20},{wch:16},{wch:4},{wch:13},{wch:50},{wch:12},{wch:12},{wch:28},{wch:28},{wch:10},{wch:7}];
+  XLSX.utils.book_append_sheet(wb,ws4,'Detailed Answers');
+
+  XLSX.writeFile(wb,`QuizMaster_All_${Date.now()}.xlsx`);
+}
+
+// ═══════════════════════════════════════
+// REVIEW
+// ═══════════════════════════════════════
+function showReview(){
+  const s = sessions[sessions.length-1];
+  showScreen('reviewScreen');
+  let h = `<div class="rv-head">
+    <div class="rv-title">Review — ${s.name}</div>
+    <button class="rv-back" onclick="showScreen('resultScreen')">← Back</button>
+  </div>`;
+
+  Q.forEach((q,i)=>{
+    const ua = s.answers[i]||{};
+    const cls = ua.correct?'ok':ua.skipped||ua.timeout?'skip':'bad';
+    const icon= ua.correct?'✅':ua.skipped?'⏭':ua.timeout?'⏰':'❌';
+    const ptsTxt = ua.correct?`+${PTS}`:ua.skipped||ua.timeout?'0':`−${q.neg}`;
+    const ptsCol = ua.correct?'color:var(--green)':ua.skipped||ua.timeout?'color:var(--gold)':'color:var(--red)';
+    const typeN = {radio:'Radio',multi:'Multi-Select',truefalse:'True/False',code:'Code Output'};
+
+    h+=`<div class="rv-item ${cls}">
+      <div class="rv-meta">
+        ${icon} Q${i+1} · ${typeN[q.type]}
+        <span class="rv-time-pill">⏱ ${s.timeTaken[i]||0}s / ${q.timeLimit}s</span>
+        <span class="rv-pts" style="${ptsCol};background:${ua.correct?'var(--green-g)':ua.skipped||ua.timeout?'var(--gold-g)':'var(--red-g)'};">${ptsTxt} pts</span>
+      </div>
+      <div class="rv-q">${q.text}</div>`;
+
+    if(q.type==='code'){
+      h+=`<div class="rv-code">${escHTML(q.code)}</div>`;
+    }
+
+    h+=`<div class="rv-albl">Your Answer</div>
+      <div class="rv-ans ${ua.correct?'ok':'bad'}">${ua.ua||'—'}</div>`;
+    if(!ua.correct){
+      h+=`<div class="rv-albl">Correct Answer</div>
+        <div class="rv-ans ca">${ua.ca||''}</div>`;
+      if(!ua.skipped&&!ua.timeout)
+        h+=`<div class="neg-note">⚠ −${q.neg} negative marking applied</div>`;
+    }
+    h+=`</div>`;
+  });
+  document.getElementById('reviewScreen').innerHTML=h;
+}
+
+// ═══════════════════════════════════════
+// CONFETTI
+// ═══════════════════════════════════════
+function confetti(){
+  const w = document.getElementById('cfC');
+  const cols=['#6366f1','#06b6d4','#10b981','#f59e0b','#f43f5e','#3b82f6','#a855f7'];
+  for(let i=0;i<80;i++){
+    const c=document.createElement('div');
+    c.className='cf';
+    const sz=5+Math.random()*9;
+    c.style.cssText=`left:${Math.random()*100}%;top:-30px;width:${sz}px;height:${sz}px;
+      background:${cols[~~(Math.random()*cols.length)]};
+      border-radius:${Math.random()>.5?'50%':'2px'};
+      animation-duration:${2+Math.random()*3}s;
+      animation-delay:${Math.random()*1.5}s;`;
+    w.appendChild(c); setTimeout(()=>c.remove(),5000);
+  }
+}
+
+// ═══════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('quizScreen').classList.contains('active')) return;
+  if(answered){
+    if(e.key==='Enter'||e.key==='ArrowRight'){e.preventDefault();doNext();}
+    return;
+  }
+  const q=Q[cQ];
+  if(['radio','code'].includes(q.type)){
+    const i='abcd'.indexOf(e.key.toLowerCase());
+    if(i>=0&&i<q.opts.length){ const b=document.querySelector(`.opt[data-i="${i}"]`); if(b) pickRadio(b,i); }
+  }
+  if(q.type==='truefalse'){
+    if(e.key==='t'||e.key==='T'){ const b=document.querySelector('.t-btn'); if(b) pickTF(b,true); }
+    if(e.key==='f'||e.key==='F'){ const b=document.querySelector('.f-btn'); if(b) pickTF(b,false); }
+  }
+  if(e.key==='Enter'&&q.type==='multi') doSubmit();
+});
+</script>
+</body>
+</html>
