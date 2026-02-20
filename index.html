@@ -541,10 +541,6 @@ pre.script{background:#0d1117;border:1px solid var(--border);border-radius:10px;
 
     <label class="inp-label">Email (optional)</label>
     <input class="inp" id="pEmail" placeholder="candidate@email.com" type="email"/>
-
-    <label class="inp-label">Google Sheets Webhook URL </label>
-    <input class="inp" id="webhookInp" placeholder="https://script.google.com/macros/s/…/exec" style="font-size:11px;"/>
-
     <button class="start-btn" onclick="startQuiz()" style="margin-top:8px;">Begin Quiz →</button>
   </div>
 </div>
@@ -605,9 +601,137 @@ else:
   print("Not Equal")`,
     opts:['Throw Error','Not Equal','Equal','No Output'],
     correct:0
+  },
+  
+  // ── RADIO ×20 ──────────────────────────────────────────────
+  {type:'radio',timeLimit:45,neg:3,
+   text:'What is Sample Data in Machine Learning?',
+   opts:['Data that is used to train a model','Data that is used to confuse a model','Data that is not used in ML','Data that is only available in the cloud'],correct:0},
+
+  {type:'radio',timeLimit:45,neg:3,
+   text:'Which of the following is an example of supervised learning?',
+   opts:['Clustering customer data','Grouping similar images','Predicting house prices using past data','Finding patterns without labels'],correct:2},
+
+  {type:'radio',timeLimit:45,neg:3,
+   text:'What does a Decision Tree use to make predictions?',
+   opts:['Matrix multiplication','A series of if/else questions on features','Gradient calculations','Cluster centroids'],correct:1},
+
+  {type:'radio',timeLimit:45,neg:3,
+   text:'In KNN Model, what does "K" represent?',
+   opts:['Number of nearest neighbors','Number of features','Number of clusters','Number of samples'],correct:0},
+
+  {type:'radio',timeLimit:45,neg:3,
+   text:'Linear Regression is used to predict:',
+   opts:['Categories like spam or not spam','Continuous values like temperature or price','Clusters of data','Images'],correct:1},
+
+  {type:'radio',timeLimit:60,neg:3,
+   text:'What is the purpose of splitting data into training and test sets?',
+   opts:['To reduce the size of the dataset','To evaluate how well the model performs on upcoming/unseen data','To clean the data','To speed up training'],correct:1},
+
+  {type:'radio',timeLimit:60,neg:3,
+   text:'Which best describes K-Means Clustering?',
+   opts:['Predicts a number for each input','Groups data into K clusters based on similarity','Classifies emails as spam or not','Builds a tree of decisions'],correct:1},
+
+  {type:'radio',timeLimit:60,neg:3,
+   text:'Which of the below is not a best philosophy to follow in life?',
+   opts:['Always ready with skills becuase oppurtunities comes in unexpected way','Financial/Time/Health Management is very important','Entertain First Learn Next because this age wont come again','Descipline and Balanced Lifestyle is important'],correct:2},
+
+  {type:'radio',timeLimit:60,neg:3,
+   text:'What is a Large Language Model (LLM)?',
+   opts:['A very large spreadsheet of words','An AI model trained on massive amounts of text to understand and generate language','A type of database','A programming language for AI'],correct:1},
+
+  {type:'radio',timeLimit:60,neg:3,
+   text:'In Reinforcement Learning, an AI agent learns by:',
+   opts:['Studying labeled data','Reading textbooks','Receiving rewards or penalties based on its actions','Copying human behavior directly'],correct:2},
+
+  {type:'radio',timeLimit:60,neg:3,
+   text:'Which of the following best describes Computer Vision?',
+   opts:['Teaching computers to speak','Enabling computers to interpret and understand visual data like images and videos','A method for storing large datasets','A programming language for AI'],correct:1},
+
+  {type:'radio',timeLimit:60,neg:3,
+   text:'Which of the following is an example of AI in everyday life?',
+   opts:['Using a calculator','A voice assistant like Siri or Alexa','Sending an email','Using a USB drive'],correct:1},
+
+  {type:'radio',timeLimit:30,neg:3,
+   text:'Which of the following is a subset of Artificial Intelligence?',
+   opts:['Cloud Computing','Cybersecurity','Machine Learning','Blockchain'],correct:2},
+
+  {type:'radio',timeLimit:60,neg:3,
+   text:'Which of the following is the best definition of Artificial Intelligence?',
+   opts:['A robot that looks like a human','The ability of machines to perform tasks that normally require human intelligence','A programming language used for data analysis','A type of computer hardware'],correct:1},
+
+  {type:'radio',timeLimit:30,neg:3,
+   text:'Which company created the AI chatbot ChatGPT?',
+   opts:['Google','Meta','OpenAI','Microsoft'],correct:2},
+
+  {type:'radio',timeLimit:30,neg:3,
+   text:'Which of the following will do same tasks repeatedly on each call in programming languages?',
+   opts:['Functions','For Loops','If Else','Arrays'],correct:0},
+
+  {type:'radio',timeLimit:45,neg:3,
+   text:'Generative AI?',
+   opts:['Generate Text','Generate Videos and Images','Generate Music and Code','All of the above'],correct:3},
+
+  {type:'radio',timeLimit:45,neg:3,
+   text:'Best Method for Average value Calculation if outliers are there?',
+   opts:['Mean','Mode','Median','Deviation'],correct:2},
+
+  {type:'radio',timeLimit:30,neg:3,
+   text:'Which of the below is not threat to AI?',
+   opts:['Biased Data','Ethics','Deepfake','Misinformation'],correct:1},
+
+  {type:'radio',timeLimit:60,neg:3,
+   text:'Class Room Attentiveness Test:  SWOT Means?',
+   opts:['Strengths, Work, Opportunities, Time','Satisfaction, Weaknesses, Outcome, Threats','Success, Wisdom, Opportunity, Threat','Strengths, Weaknesses, Opportunities, Threats'],correct:3},
+
+  // ── TRUE/FALSE ×5 ──────────────────────────────────────────
+  {type:'truefalse',timeLimit:25,neg:3,
+   text:'Class Room Attentiveness Test: Vitamin C in Guava > Apple > Oranges.',correct:false},
+
+  {type:'truefalse',timeLimit:25,neg:3,
+   text:'Class Room Attentiveness Test: In India Agriculture income is Taxed.',correct:false},
+
+  {type:'truefalse',timeLimit:25,neg:3,
+   text:'Class Room Attentiveness Test: Problems are mother of innovation.',correct:true},
+
+  {type:'truefalse',timeLimit:25,neg:3,
+   text:'Class Room Attentiveness Test: Data is transferred from US to India via Cell Towers.',correct:false},
+
+  {type:'truefalse',timeLimit:25,neg:3,
+   text:'Class Room Attentiveness Test: Google Collab Notebook Code Runs on your local machine processor.',correct:false},
+
+  // ── MULTI-SELECT ×2 ────────────────────────────────────────
+  {type:'multi',timeLimit:45,neg:3,
+   text:'Which of the following are programming languages? (Select ALL that apply)',
+   opts:['Python','C','JavaScript','Photoshop','Chatgpt'],correct:[0,1,2]},
+
+  {type:'multi',timeLimit:45,neg:3,
+   text:'What is ML & What it can do? (Select ALL that apply)',
+   opts:['Gives Only Existing Data','Learns From Existing Data','Can do predictions','Can be trained on its own without models','Needs Model to Train'],correct:[1,2,4]},
+
+  // ── CODE OUTPUT ×3 ─────────────────────────────────────────
+  {
+    type:'code', timeLimit:45, neg:3,
+    text:'What is the output of the following Python code?',
+    lang:'Python',
+    code:
+`x = [1, 2, 3, 4, 5]
+print(x[1:4])`,
+    opts:['[1, 2, 3]','[2, 3, 4]','[1, 2, 3, 4]','[2, 3, 4, 5]'],
+    correct:1
+  },
+
+  {
+    type:'code', timeLimit:45, neg:3,
+    text:'What is the output?',
+    lang:'Python',
+    code:
+`def greet(name):
+    return "Hello, " + name + "!"
+    print(greet("World"))`,
+    opts:['Hello, World','Hello, World!','greet("World")','undefined'],
+    correct:1
   }
-  
-  
 ];
 
 // ═══════════════════════════════════════
@@ -617,6 +741,7 @@ const CIRC = 2 * Math.PI * 26;
 const PTS  = 10;
 
 let cQ=0, score=0, negDed=0, timer=null, answered=false;
+let quizStart=0;
 let userAns=[], timeTaken=[], qStart=0;
 let sessions=[];
 // Restore sessions from localStorage on page load
@@ -624,7 +749,8 @@ try{
   const saved = localStorage.getItem('qm_sessions');
   if(saved) sessions = JSON.parse(saved);
 }catch(e){ sessions=[]; }
-let pName='', pEmail='', webhookUrl='';
+let pName='', pEmail='';
+const webhookUrl='https://script.google.com/macros/s/AKfycbwIvrKDEeGe9r28xjzOsZLB_RmufhkSHn4qLgXsfmJtfADYKMe7vH_s9S8qjjrNHqNv/exec';
 
 // ═══════════════════════════════════════
 // UTILS
@@ -646,8 +772,8 @@ function copyScript(){
 function startQuiz(){
   pName    = document.getElementById('pName').value.trim() || 'Candidate';
   pEmail   = document.getElementById('pEmail').value.trim() || '';
-  webhookUrl = document.getElementById('webhookInp').value.trim();
   cQ=0; score=0; negDed=0; userAns=[]; timeTaken=[];
+  quizStart = Date.now();
   showScreen('quizScreen');
   loadQ();
 }
@@ -729,28 +855,25 @@ function buildCard(q){
 function escHTML(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function syntaxHL(code, lang){
-  function escTextOnly(str){
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-  function applyHL(s, kwList){
-    s = s.replace(/(#[^\n]*)/g, function(m){ return '<span class="cm">'+escTextOnly(m)+'</span>'; });
-    s = s.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, function(m){ return '<span class="st">'+escTextOnly(m)+'</span>'; });
+  function escT(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function applyHL(s, kw){
+    s = s.replace(/(#[^\n]*)/g, function(m){ return '<span class="cm">'+escT(m)+'</span>'; });
+    s = s.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, function(m){ return '<span class="st">'+escT(m)+'</span>'; });
     var parts = s.split(/(<span[^>]*>.*?<\/span>)/);
     return parts.map(function(p){
-      if(p.startsWith('<span')){ return p; }
-      p = escTextOnly(p);
-      p = p.replace(new RegExp('\\b('+kwList+')\\b','g'),'<span class="kw">$1</span>');
+      if(p.startsWith('<span')) return p;
+      p = escT(p);
+      p = p.replace(new RegExp('\\b('+kw+')\\b','g'),'<span class="kw">$1</span>');
       p = p.replace(/\b(\d+)\b/g,'<span class="nm">$1</span>');
       return p;
     }).join('');
   }
-  if(lang==='Python'){
-    return applyHL(code,'def|return|if|else|elif|for|while|in|import|from|pass|None|True|False|and|or|not|print|len|range|sum');
-  } else if(lang==='JavaScript'){
-    var s = code.replace(/(\/\/[^\n]*)/g, function(m){ return '<span class="cm">'+escTextOnly(m)+'</span>'; });
+  if(lang==='Python') return applyHL(code,'def|return|if|else|elif|for|while|in|import|from|pass|None|True|False|and|or|not|print|len|range|sum');
+  if(lang==='JavaScript'){
+    var s=code.replace(/(\/\/[^\n]*)/g,function(m){return '<span class="cm">'+escT(m)+'</span>';});
     return applyHL(s,'function|return|var|let|const|if|else|for|while|console|log|true|false|null|undefined|new|typeof|this');
   }
-  return escTextOnly(code);
+  return escT(code);
 }
 
 // ═══════════════════════════════════════
@@ -953,12 +1076,18 @@ function saveSession(){
     else if(!ua.skipped&&!ua.timeout){ byType[key].wrong++; }
   });
 
+  const totalTimeSec = Math.round((Date.now() - quizStart) / 1000);
+  const totalMins = Math.floor(totalTimeSec/60);
+  const totalSecs = totalTimeSec % 60;
+  const totalTimeStr = totalMins>0 ? totalMins+'m '+totalSecs+'s' : totalSecs+'s';
+
   sessions.push({
     name:pName, email:pEmail,
     date:new Date().toLocaleString(),
     score, maxScore:Q.length*PTS, pct, grade,
     correct, wrong, skipped, negDed,
     byType,
+    totalTimeSec, totalTimeStr,
     answers:[...userAns],
     timeTaken:[...timeTaken]
   });
@@ -973,9 +1102,9 @@ function showResults(){
   stopTimer();
   showScreen('resultScreen');
   const s = sessions[sessions.length-1];
-  const emoji  = s.pct>=90?'🏆':s.pct>=75?'🎉':s.pct>=50?'👍':'💪';
-  const tag    = s.pct>=90?'Outstanding!':s.pct>=75?'Great work!':s.pct>=50?'Good effort!':'Keep practising!';
-  const gCls   = s.pct>=90?'gA':s.pct>=75?'gB':s.pct>=50?'gC':'gD';
+  const emoji = s.pct>=90?'🏆':s.pct>=75?'🎉':s.pct>=50?'👍':'💪';
+  const tag   = s.pct>=90?'Outstanding!':s.pct>=75?'Great work!':s.pct>=50?'Good effort!':'Keep practising!';
+  const gCls  = s.pct>=90?'gA':s.pct>=75?'gB':s.pct>=50?'gC':'gD';
 
   const el = document.getElementById('resultScreen');
   el.innerHTML=`
@@ -997,6 +1126,11 @@ function showResults(){
         <div class="stat st-b"><div class="stat-n">${s.score}/${s.maxScore}</div><div class="stat-l">Points</div></div>
         <div class="stat st-p"><div class="stat-n">−${s.negDed}</div><div class="stat-l">Negative</div></div>
       </div>
+      <div style="margin:12px auto 0;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:10px 18px;display:inline-flex;align-items:center;gap:10px;font-size:13px;">
+        <span style="font-size:18px;">⏱</span>
+        <span style="color:var(--muted);">Total Time:</span>
+        <strong style="color:var(--accent);font-size:15px;">${s.totalTimeStr||'—'}</strong>
+      </div>
       <div class="type-breakdown">
         <div class="tb-title">Score by Question Type</div>
         <div class="tb-row"><span class="tb-type">⊙ Radio (×20)</span><span class="tb-score" style="color:var(--gold)">${s.byType.radio.score}/200 · ${s.byType.radio.correct}✓ ${s.byType.radio.wrong}✗</span></div>
@@ -1006,38 +1140,23 @@ function showResults(){
       </div>
       <div class="r-actions">
         <button class="rb rb-retry" onclick="startQuiz()">Try Again</button>
-        <button class="rb rb-review" onclick="showReview()">Review</button>
-        <button class="rb rb-xl" onclick="exportOneXL()">📊 Excel</button>
-        <button class="rb rb-gs" id="bSendOne" onclick="sendSheets(sessions.length-1)" ${!webhookUrl?'disabled title="Add webhook URL"':''}>🔗 Send to Sheets</button>
+        <button class="rb rb-review" onclick="showReview()">Review Answers</button>
       </div>
-    </div>
-
-    <div class="sp" id="spanel">
-      <div class="sp-head">
-        <div class="sp-title">All Candidates</div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span class="sp-count" id="spCount"></span>
-          <button class="sp-clr" onclick="clrAll()">Clear All</button>
-        </div>
-      </div>
-      <div id="spTbl"></div>
-      <div class="export-row">
-        <button class="exp-btn exp-xl" onclick="exportAllXL()">📊 Export All → Excel</button>
-        <button class="exp-btn exp-gs" id="bSendAll" onclick="sendAllSheets()" ${!webhookUrl?'disabled title="Add webhook URL"':''}>🔗 Send All → Google Sheets</button>
-      </div>
-    </div>
-
-    <div class="wh-strip">
-      <h4>🔗 Google Sheets Webhook</h4>
-      <div class="wh-row">
-        <input class="wh-inp" id="liveWH" value="${webhookUrl}" placeholder="https://script.google.com/macros/s/…/exec"/>
-        <button class="wh-save" onclick="saveWH()">Save</button>
+      <div id="sendStatus" style="margin-top:14px;font-size:12px;color:var(--muted);text-align:center;">
+        📤 Sending results...
       </div>
     </div>`;
 
-  renderSP();
   if(s.pct>=75) confetti();
-  if(webhookUrl) sendSheets(sessions.length-1, true);
+
+  // Auto-send silently to Google Sheets
+  sendSheets(sessions.length-1, true).then(()=>{
+    const st = document.getElementById('sendStatus');
+    if(st) st.innerHTML='✅ Results saved successfully!';
+  }).catch(()=>{
+    const st = document.getElementById('sendStatus');
+    if(st) st.innerHTML='⚠️ Could not save results. Please screenshot your score.';
+  });
 }
 
 function saveWH(){
@@ -1086,33 +1205,25 @@ function clrAll(){ if(confirm('Clear all sessions?')){ sessions=[]; try{localSto
 // GOOGLE SHEETS SEND
 // ═══════════════════════════════════════
 async function sendSheets(idx, silent=false){
-  if(!webhookUrl){ if(!silent) alert('No webhook URL set.'); return; }
   const s = sessions[idx];
   const payload = {
-    timestamp:s.date, name:s.name, email:s.email,
+    timestamp:s.date, name:s.name, email:s.email||'',
     score:s.score, maxScore:s.maxScore, pct:s.pct, grade:s.grade,
     correct:s.correct, wrong:s.wrong, skipped:s.skipped, negDed:s.negDed,
+    totalTimeSec: s.totalTimeSec||0,
+    totalTimeStr: s.totalTimeStr||'—',
     byType:s.byType,
     qs: Q.map((q,i)=>{
       const ua = s.answers[i]||{};
       return {
-        result: ua.correct?'Correct':ua.skipped?'Skipped':ua.timeout?'Timeout':'Wrong',
-        pts: ua.pts||0,
+        q: q.type==='code'?q.code:q.text,
+        result: ua.correct?'Correct':ua.timeout?'Timeout':ua.skipped?'Skipped':'Wrong',
+        pts: ua.correct?PTS:(ua.skipped||ua.timeout)?0:-q.neg,
         time: s.timeTaken[i]||0
       };
     })
   };
-  if(!silent){
-    document.getElementById('spinOv').style.display='flex';
-    document.getElementById('spinTxt').textContent=`Sending ${s.name}'s result…`;
-  }
-  try {
-    await fetch(webhookUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    if(!silent){ document.getElementById('spinOv').style.display='none'; alert(`✅ Sent to Google Sheets!`); }
-  } catch(e){
-    document.getElementById('spinOv').style.display='none';
-    if(!silent) alert('❌ Send failed. Check your webhook URL.');
-  }
+  await fetch(webhookUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
 }
 
 async function sendAllSheets(){
