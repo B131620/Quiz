@@ -588,21 +588,6 @@ pre.script{background:#0d1117;border:1px solid var(--border);border-radius:10px;
 // QUESTIONS — 20 Radio + 5 TF + 2 Multi + 3 Code = 30
 // ═══════════════════════════════════════
 const Q = [
-
-  {
-    type:'code', timeLimit:60, neg:3,
-    text:'What is the output of this Python code? (Observe carefully)',
-    lang:'Python',
-    code:`x=2
-y=4
-if x=y:
-  print("Equal")
-else:
-  print("Not Equal")`,
-    opts:['Throw Error','Not Equal','Equal','No Output'],
-    correct:0
-  },
-  
   // ── RADIO ×20 ──────────────────────────────────────────────
   {type:'radio',timeLimit:45,neg:3,
    text:'What is Sample Data in Machine Learning?',
@@ -710,6 +695,19 @@ else:
    opts:['Gives Only Existing Data','Learns From Existing Data','Can do predictions','Can be trained on its own without models','Needs Model to Train'],correct:[1,2,4]},
 
   // ── CODE OUTPUT ×3 ─────────────────────────────────────────
+    {
+    type:'code', timeLimit:60, neg:3,
+    text:'What is the output of this Python code? (Observe carefully)',
+    lang:'Python',
+    code:`x=2
+y=4
+if x=y:
+  print("Equal")
+else:
+  print("Not Equal")`,
+    opts:['Throw Error','Not Equal','Equal','No Output'],
+    correct:0
+  },
   {
     type:'code', timeLimit:45, neg:3,
     text:'What is the output of the following Python code?',
