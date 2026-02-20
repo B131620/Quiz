@@ -605,137 +605,9 @@ else:
   print("Not Equal")`,
     opts:['Throw Error','Not Equal','Equal','No Output'],
     correct:0
-  },
-  
-  // ── RADIO ×20 ──────────────────────────────────────────────
-  {type:'radio',timeLimit:45,neg:3,
-   text:'What is Sample Data in Machine Learning?',
-   opts:['Data that is used to train a model','Data that is used to confuse a model','Data that is not used in ML','Data that is only available in the cloud'],correct:0},
-
-  {type:'radio',timeLimit:45,neg:3,
-   text:'Which of the following is an example of supervised learning?',
-   opts:['Clustering customer data','Grouping similar images','Predicting house prices using past data','Finding patterns without labels'],correct:2},
-
-  {type:'radio',timeLimit:45,neg:3,
-   text:'What does a Decision Tree use to make predictions?',
-   opts:['Matrix multiplication','A series of if/else questions on features','Gradient calculations','Cluster centroids'],correct:1},
-
-  {type:'radio',timeLimit:45,neg:3,
-   text:'In KNN Model, what does "K" represent?',
-   opts:['Number of nearest neighbors','Number of features','Number of clusters','Number of samples'],correct:0},
-
-  {type:'radio',timeLimit:45,neg:3,
-   text:'Linear Regression is used to predict:',
-   opts:['Categories like spam or not spam','Continuous values like temperature or price','Clusters of data','Images'],correct:1},
-
-  {type:'radio',timeLimit:60,neg:3,
-   text:'What is the purpose of splitting data into training and test sets?',
-   opts:['To reduce the size of the dataset','To evaluate how well the model performs on upcoming/unseen data','To clean the data','To speed up training'],correct:1},
-
-  {type:'radio',timeLimit:60,neg:3,
-   text:'Which best describes K-Means Clustering?',
-   opts:['Predicts a number for each input','Groups data into K clusters based on similarity','Classifies emails as spam or not','Builds a tree of decisions'],correct:1},
-
-  {type:'radio',timeLimit:60,neg:3,
-   text:'Which of the below is not a best philosophy to follow in life?',
-   opts:['Always ready with skills becuase oppurtunities comes in unexpected way','Financial/Time/Health Management is very important','Entertain First Learn Next because this age wont come again','Descipline and Balanced Lifestyle is important'],correct:2},
-
-  {type:'radio',timeLimit:60,neg:3,
-   text:'What is a Large Language Model (LLM)?',
-   opts:['A very large spreadsheet of words','An AI model trained on massive amounts of text to understand and generate language','A type of database','A programming language for AI'],correct:1},
-
-  {type:'radio',timeLimit:60,neg:3,
-   text:'In Reinforcement Learning, an AI agent learns by:',
-   opts:['Studying labeled data','Reading textbooks','Receiving rewards or penalties based on its actions','Copying human behavior directly'],correct:2},
-
-  {type:'radio',timeLimit:60,neg:3,
-   text:'Which of the following best describes Computer Vision?',
-   opts:['Teaching computers to speak','Enabling computers to interpret and understand visual data like images and videos','A method for storing large datasets','A programming language for AI'],correct:1},
-
-  {type:'radio',timeLimit:60,neg:3,
-   text:'Which of the following is an example of AI in everyday life?',
-   opts:['Using a calculator','A voice assistant like Siri or Alexa','Sending an email','Using a USB drive'],correct:1},
-
-  {type:'radio',timeLimit:30,neg:3,
-   text:'Which of the following is a subset of Artificial Intelligence?',
-   opts:['Cloud Computing','Cybersecurity','Machine Learning','Blockchain'],correct:2},
-
-  {type:'radio',timeLimit:60,neg:3,
-   text:'Which of the following is the best definition of Artificial Intelligence?',
-   opts:['A robot that looks like a human','The ability of machines to perform tasks that normally require human intelligence','A programming language used for data analysis','A type of computer hardware'],correct:1},
-
-  {type:'radio',timeLimit:30,neg:3,
-   text:'Which company created the AI chatbot ChatGPT?',
-   opts:['Google','Meta','OpenAI','Microsoft'],correct:2},
-
-  {type:'radio',timeLimit:30,neg:3,
-   text:'Which of the following will do same tasks repeatedly on each call in programming languages?',
-   opts:['Functions','For Loops','If Else','Arrays'],correct:0},
-
-  {type:'radio',timeLimit:45,neg:3,
-   text:'Generative AI?',
-   opts:['Generate Text','Generate Videos and Images','Generate Music and Code','All of the above'],correct:3},
-
-  {type:'radio',timeLimit:45,neg:3,
-   text:'Best Method for Average value Calculation if outliers are there?',
-   opts:['Mean','Mode','Median','Deviation'],correct:2},
-
-  {type:'radio',timeLimit:30,neg:3,
-   text:'Which of the below is not threat to AI?',
-   opts:['Biased Data','Ethics','Deepfake','Misinformation'],correct:1},
-
-  {type:'radio',timeLimit:60,neg:3,
-   text:'Class Room Attentiveness Test:  SWOT Means?',
-   opts:['Strengths, Work, Opportunities, Time','Satisfaction, Weaknesses, Outcome, Threats','Success, Wisdom, Opportunity, Threat','Strengths, Weaknesses, Opportunities, Threats'],correct:3},
-
-  // ── TRUE/FALSE ×5 ──────────────────────────────────────────
-  {type:'truefalse',timeLimit:25,neg:3,
-   text:'Class Room Attentiveness Test: Vitamin C in Guava > Apple > Oranges.',correct:false},
-
-  {type:'truefalse',timeLimit:25,neg:3,
-   text:'Class Room Attentiveness Test: In India Agriculture income is Taxed.',correct:false},
-
-  {type:'truefalse',timeLimit:25,neg:3,
-   text:'Class Room Attentiveness Test: Problems are mother of innovation.',correct:true},
-
-  {type:'truefalse',timeLimit:25,neg:3,
-   text:'Class Room Attentiveness Test: Data is transferred from US to India via Cell Towers.',correct:false},
-
-  {type:'truefalse',timeLimit:25,neg:3,
-   text:'Class Room Attentiveness Test: Google Collab Notebook Code Runs on your local machine processor.',correct:false},
-
-  // ── MULTI-SELECT ×2 ────────────────────────────────────────
-  {type:'multi',timeLimit:45,neg:3,
-   text:'Which of the following are programming languages? (Select ALL that apply)',
-   opts:['Python','C','JavaScript','Photoshop','Chatgpt'],correct:[0,1,2]},
-
-  {type:'multi',timeLimit:45,neg:3,
-   text:'What is ML & What it can do? (Select ALL that apply)',
-   opts:['Gives Only Existing Data','Learns From Existing Data','Can do predictions','Can be trained on its own without models','Needs Model to Train'],correct:[1,2,4]},
-
-  // ── CODE OUTPUT ×3 ─────────────────────────────────────────
-  {
-    type:'code', timeLimit:45, neg:3,
-    text:'What is the output of the following Python code?',
-    lang:'Python',
-    code:
-`x = [1, 2, 3, 4, 5]
-print(x[1:4])`,
-    opts:['[1, 2, 3]','[2, 3, 4]','[1, 2, 3, 4]','[2, 3, 4, 5]'],
-    correct:1
-  },
-
-  {
-    type:'code', timeLimit:45, neg:3,
-    text:'What is the output?',
-    lang:'Python',
-    code:
-`def greet(name):
-    return "Hello, " + name + "!"
-    print(greet("World"))`,
-    opts:['Hello, World','Hello, World!','greet("World")','undefined'],
-    correct:1
   }
+  
+  
 ];
 
 // ═══════════════════════════════════════
@@ -747,6 +619,11 @@ const PTS  = 10;
 let cQ=0, score=0, negDed=0, timer=null, answered=false;
 let userAns=[], timeTaken=[], qStart=0;
 let sessions=[];
+// Restore sessions from localStorage on page load
+try{
+  const saved = localStorage.getItem('qm_sessions');
+  if(saved) sessions = JSON.parse(saved);
+}catch(e){ sessions=[]; }
 let pName='', pEmail='', webhookUrl='';
 
 // ═══════════════════════════════════════
@@ -852,18 +729,14 @@ function buildCard(q){
 function escHTML(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function syntaxHL(code, lang){
-  // Highlight on raw code first, then escape HTML in text-only parts
   function escTextOnly(str){
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
   function applyHL(s, kwList){
-    // 1. comments
     s = s.replace(/(#[^\n]*)/g, function(m){ return '<span class="cm">'+escTextOnly(m)+'</span>'; });
-    // 2. strings
     s = s.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, function(m){ return '<span class="st">'+escTextOnly(m)+'</span>'; });
-    // 3. now escape remaining text (outside spans) and add keywords/numbers
     var parts = s.split(/(<span[^>]*>.*?<\/span>)/);
-    return parts.map(function(p, i){
+    return parts.map(function(p){
       if(p.startsWith('<span')){ return p; }
       p = escTextOnly(p);
       p = p.replace(new RegExp('\\b('+kwList+')\\b','g'),'<span class="kw">$1</span>');
@@ -874,7 +747,7 @@ function syntaxHL(code, lang){
   if(lang==='Python'){
     return applyHL(code,'def|return|if|else|elif|for|while|in|import|from|pass|None|True|False|and|or|not|print|len|range|sum');
   } else if(lang==='JavaScript'){
-    var s = code.replace(/(\/{2}[^\n]*)/g, function(m){ return '<span class="cm">'+escTextOnly(m)+'</span>'; });
+    var s = code.replace(/(\/\/[^\n]*)/g, function(m){ return '<span class="cm">'+escTextOnly(m)+'</span>'; });
     return applyHL(s,'function|return|var|let|const|if|else|for|while|console|log|true|false|null|undefined|new|typeof|this');
   }
   return escTextOnly(code);
@@ -1089,6 +962,8 @@ function saveSession(){
     answers:[...userAns],
     timeTaken:[...timeTaken]
   });
+  // Persist sessions to localStorage so they survive page refresh
+  try{ localStorage.setItem('qm_sessions', JSON.stringify(sessions)); }catch(e){}
 }
 
 // ═══════════════════════════════════════
@@ -1204,8 +1079,8 @@ function renderSP(){
   h+=`</tbody></table>`;
   wrap.innerHTML=h;
 }
-function delS(i){ sessions.splice(i,1); renderSP(); }
-function clrAll(){ if(confirm('Clear all sessions?')){ sessions=[]; renderSP(); } }
+function delS(i){ sessions.splice(i,1); try{localStorage.setItem('qm_sessions',JSON.stringify(sessions));}catch(e){} renderSP(); }
+function clrAll(){ if(confirm('Clear all sessions?')){ sessions=[]; try{localStorage.removeItem('qm_sessions');}catch(e){} renderSP(); } }
 
 // ═══════════════════════════════════════
 // GOOGLE SHEETS SEND
