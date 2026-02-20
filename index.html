@@ -729,7 +729,23 @@ print(x[1:4])`,
     print(greet("World"))`,
     opts:['Hello, World','Hello, World!','greet("World")','undefined'],
     correct:1
-  }
+  },
+// ── FAST RADIAL ×5 ─────────────────────────────────────────
+  {type:'radio',timeLimit:10,neg:2,
+   text:'Which of these is a Machine Learning type?',
+   opts:['Unsupervised Learning','Direct Learning','Controlled Learning','Detailed Learning'],correct:0},
+  {type:'radio',timeLimit:10,neg:2,
+  text:'Accuracy is?',
+  opts:['Model speed','Correct Predictions','RAM size','GPU Power'],correct:1},
+  {type:'radio',timeLimit:10,neg:2,
+  text:'Dataset means?',
+  opts:['Collection of data','Single Value','Single Row','Code File'],correct:0},
+  {type:'radio',timeLimit:10,neg:0,
+  text:'If AI becomes your assistant, what will it NOT do?',
+  opts:['Set alarm','Recommend Movies','Eat your lunch','Translate'],correct:2},
+  {type:'radio',timeLimit:10,neg:2,
+  text:'ChatGPT writing assignment at 2AM be like...',
+  opts:['Reinforcement learning','Generative AI','Excel Sheet','Anti-Virus'],correct:1},
 ];
 
 // ═══════════════════════════════════════
